@@ -1,0 +1,39 @@
+<nav class="navbar bg-white d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3  border-bottom box-shadow">
+
+    <h5 class="my-0 mr-md-auto font-weight-normal form-inline">
+        <a class="navbar-brand" class="form-inline" href="/">
+            <img  src="/images/logo_only.png" alt="Logo" height="45"></a>
+        <a class="nav-link" href="/catalog">Katalog</a>
+        <a class="nav-link" href="/library">Moja Biblioteczka</a>
+       <!-- <a class="nav-link" href="/recommendations"> Rekomendacje </a> -->
+    </h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+    <form action="/find" method="POST" id="szukaj">
+        <div class="input-group">
+          <input type="search" name="find_item" class="form-control input-sm" placeholder="tytuł/autor/kategoria/seria" aria-label="Szukaj">
+          <div class="input-group-addon">
+            <button class="btn btn-info btn-sm" type="submit">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+    </form>
+    </nav>
+
+    <nav class="my-2 my-md-0 mr-md-3">
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user"></i> Mój profil
+            </button>
+
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/user-profile">Mój profil</a>
+                <a class="dropdown-item" href="/policy">Moje płatności</a>
+                <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout">
+                        <i class="fa fa-sign-out-alt"></i> Wyloguj
+                    </a>
+                </div>
+        </div>
+
+    </nav>
+</nav>

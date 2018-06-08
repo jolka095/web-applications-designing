@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('header.ejs') %>
+</head>
+<body>
+        <%if (user) { %>             <%- include('navbar.ejs') %>         <% } else { %>             <%- include('navbar1.ejs') %>         <% } %>
+
+    <div class="container">
+            <br>  <br>
+        <h2> Kontakt </h2>
+        <hr>
+        <div class="text-container text-justify">
+                <br>  <br>    
+            VirtualLibrary.pl Sp. z o.o.<br>
+            ul. Szalonych informatyczek 11651654 lok. dziki<br>
+            26545-168645165 Dramaland<br>
+            NIP ************<br>
+            <br>  <br>
+            kontakt@virtuallibrary.pl<br>
+            tel: 12 123 453 1236
+
+        </div>
+        
+            
+    </div>
+
+
+
+
+<%- include('footer.ejs') %>
+</body>
+</html>

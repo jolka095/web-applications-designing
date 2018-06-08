@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('header.ejs') %>
+</head>
+<body>
+            <%if (user) { %>             <%- include('navbar.ejs') %>         <% } else { %>             <%- include('navbar1.ejs') %>         <% } %>
+
+        <%if (book !== undefined && book !== null) { %>
+            <div class="container book_container">
+
+                <div class="row">
+
+                    <div class="col-md-4 ">
+                        <%if (user) { %> <a href="/book_read/<%= book.book_id %>"  title="Czytaj >>">
+                            <img class="img-fluid mx-auto d-block" src="/<%= book.image %>" alt="book cover">
+                        </a> %> <% } else { %>
+                            <img class="img-fluid mx-auto d-block" src="/<%= book.image %>" alt="book cover">
+                        <% } %>
+                        <%if (user !== undefined && user !== null) { %>
+                            
+                            <%if (status !== undefined && status !== null && status == 0) { %>
+                            <div class="dropdown show text-center">
+                                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Dodaj do biblioteczki </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <form action = "<%= '/book_profile/read/'+ book.book_id %>"  method = "POST">
+                                        <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane</button>
+                                        </form>
+                                        <form action = "<%= '/book_profile/add_to_read/'+ book.book_id %>"  method = "POST">
+                                        <button class="dropdown-item btn btn-secondary fa fa-plus-circle" type="submit" id="chce_przeczytac"> Chcę przeczytać</button>
+                                        </form>
+                                    </div>
+                            </div>
+                            <% } %>
+                            <%if (status !== undefined && status !== null && status == 1) { %>
+                                <h6 class="text-center"> Status:<br> <strong>Przeczytana</strong></h6>
+                                <div class="dropdown show text-center">
+                                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <!-- <form action = "<%= '/book_profile/read/'+ book.book_id %>"  method = "POST">
+                                        <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane </button>
+                                        </form> -->
+                                        <form action = "<%= '/book_profile/read/remove/'+ book.book_id %>"  method = "POST">
+                                        <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            <% } %>
+                            <%if (status !== undefined && status !== null && status == 3) { %>
+                                <h3> Teraz czytam </h3>
+                                <h5> I TO SIE MA CHYBA AUTOMATYCZNIE DODAWAĆ?</h5>
+                            <% } %>
+                            <%if (status !== undefined && status !== null && status == 2) { %>                                
+                                <h6 class="text-center"> Status:<br> <strong>Chcę  przeczytać</strong></h6>
+                                <div class="dropdown show text-center">
+                                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień status </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <form action = "<%= '/book_profile/read/'+ book.book_id %>"  method = "POST">
+                                        <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane </button>
+                                        </form>
+                                        <form action = "<%= '/book_profile/add_to_read/remove/'+ book.book_id %>"  method = "POST">
+                                        <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            <% } %>
+
+                        <% } %>
+                        <!-- <div class="btn-group" role="group"> -->
+                    </div>
+
+                    <div id="book_info" class="col-md-8 text-left card ">
+
+                        <div class="title">
+                            <strong> <i> <%= book.title %> </i> </strong>
+                        </div>
+
+                        <div class="author"> <br>autorstwa 
+                            <a href="/authors/<%= book.author_id %>/<%= book.author %>">
+                                <%= book.author %>
+                            </a>
+                        </div>
+
+                        <div class="series">
+                            <%if (book.series !== undefined && book.series !== null) { %>
+                                Seria:
+                                <a href="/series/<%= book.series_id %>/<%= book.series %>">
+                                    <%= book.series %>
+                                </a> tom
+                                <%= book.vol_in_series %>
+                                    <br>
+                                    <br>
+                                    <% } %>
+                        </div>
+
+                        <div class="category"> Z kategorii:
+                            <a href="/categories/<%= book.category_id %>/<%= book.category %>">
+                                <%= book.category %>
+                            </a>
+                        </div>
+
+                        <div class="language"> Dostępna w języku:
+                                <a href="/languages/<%= book.language %>">
+                                    <%= book.language %>
+                                </a>
+                                <br>
+                                <br>
+                        </div>
+
+                        <div class="rating inline-block" id="ratingStars">
+                            <%if (Math.round(book.avg_mark) == 0) { %>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <% } else if (Math.round(book.avg_mark) == 1) { %>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <% } else if (Math.round(book.avg_mark) == 2) { %>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <% } else if (Math.round(book.avg_mark) == 3) { %>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <% } else if (Math.round(book.avg_mark) == 4) { %>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star-o"></i>
+                            <% } else if (Math.round(book.avg_mark) == 5) { %>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <i aria-hidden="true" class="fa fa-star"></i>
+                            <% } %>
+
+                            <strong> <%= book.avg_mark %>/5 </strong>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <%= book.total_marks_num %> ocen
+
+                            <%if (user !== undefined && user !== null) { %>
+                                <%if (status !== undefined && status !== null && status == 1) { %>
+                                <%if (mark !== undefined && mark !== null && mark == 10) { %>
+
+                                <br><br>
+                                <form action="<%= '/book_profile/rate_book/'+ book.book_id + '/user/'+ user.idusers %>" method="POST" id="ratingForm">
+                                    <!-- <label>Oceń książkę:</label> -->
+                                    <select name="mark" id="ratingSelect" class="form-control" onchange='this.form.submit()' style="max-width: 150px;">
+                                        <option selected disabled> Oceń książkę </option>
+                                        <option value="0">Zła (0)</option>
+                                        <option value="1">Słaba (1)</option>
+                                        <option value="2">Może być (2)</option>
+                                        <option value="3">Przeciętna(3)</option>
+                                        <option value="4">Dobra(4)</option>
+                                        <option value="5">Bardzo dobra(5)</option>
+                                    </select>
+                                    <noscript><input type="submit" value="Submit"></noscript>
+                                </form>
+                                <% } else { %>
+                                   <br> Twoja ocena to: <%=  mark - 1 %>
+                                   <br><br>
+                                <form action="<%= '/book_profile/rate_book/'+ book.book_id + '/user/'+ user.idusers %>" method="POST" id="ratingForm">
+                                    <!-- <label>Oceń książkę:</label> -->
+                                    <select name="mark" id="ratingSelect" class="form-control" onchange='this.form.submit()' style="max-width: 150px;">
+                                        <option selected disabled> Zmień ocenę: </option>
+                                        <option value="0">Zła (0)</option>
+                                        <option value="1">Słaba (1)</option>
+                                        <option value="2">Może być (2)</option>
+                                        <option value="3">Przeciętna(3)</option>
+                                        <option value="4">Dobra(4)</option>
+                                        <option value="5">Bardzo dobra(5)</option>
+                                    </select>
+                                    <noscript><input type="submit" value="Submit"></noscript>
+                                </form>
+
+                                 <% } %>
+                                 <% } %>
+                            <% } %>
+                        </div>
+
+                        <div class="synopsis text-justify">
+                            <%= book.synopsis %>
+                        </div>
+                        <hr>
+
+
+                        <div class="details">
+                            <button class="btn btn-outline-info" type="button" data-toggle="collapse" data-target="#footwear" aria-expanded="false" aria-controls="footwear">
+                                <strong> Więcej szczegółów </strong>
+                            </button>
+
+                            <p class="text-justify collapse" id="footwear">
+                                Wydano
+                                <%= (book.publish_date).getDate(); %>.
+                                <%if ((book.publish_date).getMonth() + 1 < 10) { %> 0 <% } %>
+                                <%= 1+(book.publish_date).getMonth(); %>. <%= (book.publish_date).getFullYear(); %>
+
+                                przez                       <%= book.publisher %>.
+                                <br> Numer referncyjny:     <%= book.ISBN %>.
+                                <br>Tytuł oryginalny:       <%= book.original_title %>.
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+
+            <% } %>
+
+                <%- include('footer.ejs') %>
+</body>
+</html>

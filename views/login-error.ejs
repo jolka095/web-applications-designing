@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('header.ejs') %>
+  </head>
+  <body>
+            <%if (user) { %>             <%- include('navbar.ejs') %>         <% } else { %>             <%- include('navbar1.ejs') %>         <% } %>
+
+    <div class="login-form">
+        <form action="/login" method="post">
+
+            <h2 class="text-center">Logowanie</h2>
+            <p style="color: red; text-align:center;"> Nieprawidłowy email lub hasło </p>
+            <div class="form-group">
+                <input type="text" class="form-control" name="email" placeholder="E-mail" required="required">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" name="password" placeholder="Hasło" required="required">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block">Zaloguj</button>
+            </div>
+            <div class="clearfix">
+                <label class="pull-left checkbox-inline"><input type="checkbox"> Zapamiętaj mnie </label>
+                <br><br>
+                <p><a href="/password-help" class="pull-right" >Nie pamiętasz hasła?</a></p>
+                <p><a href="/register" class="pull-right"> Nie masz konta? <b> Zarejestruj się! </b> </a></p>
+                
+            </div>        
+        </form>
+        
+    </div>
+
+
+    <%- include('footer.ejs') %>
+       
+  </body>
+</html>
