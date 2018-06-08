@@ -3,8 +3,22 @@ var router = express.Router();
 const auth = require('../authentication/middleware');
 const db = require('../db');
 
+// import Sequelize models
+const User = require('../models/user')
+const Status = require('../models/status')
+const Series = require('../models/series')
+const Author = require('../models/author')
+const Mark = require('../models/mark')
+const Category = require('../models/category')
+const Book = require('../models/book')
+const BookStatus = require('../models/book_status')
+const BookSeries = require('../models/book_series')
+const BookMark = require('../models/book_marks')
+
 // finding books version edvanced 3
 router.post('/find', (req, res) => {
+
+
   console.log(JSON.stringify(req.body, null, 2));
 
   let id = 0;
@@ -91,30 +105,26 @@ router.post('/find', (req, res) => {
 })
 
 
-/* GET home page. */
 router.get('/', function (req, res, next) {
 
-  const queryStatement = `SELECT * FROM book_info ORDER BY avg_mark DESC LIMIT 4;`;
-
-  db.query(queryStatement, (error, result) => {
-
-    if (result === null || result === undefined || result.length === 0) {
-
-      res.send("Nie znaleziono żadnych kategorii w bazie")
-
-    }
-    else {
-
-      if (req.user) {
-        console.log("\nZALOGOWANY\n")
-      } else {
-        console.log("\n----> NIEZALOGOWANY\n")
-      }
-      // console.log(JSON.stringify(result, null, 2))
-      res.render('index', { booksArr: result, user: req.user })
-    }
-
+  Book.findAll({
+    order: [['idbooks', 'DESC']], // TODO: order by "avg_mark" like in old query:   `SELECT * FROM book_info ORDER BY avg_mark DESC LIMIT 4;`
+    limit: 4
   })
+    .then(result => {
+
+      if (result === null || result === undefined || result.length === 0) {
+        res.send("Nie znaleziono żadnych kategorii w bazie")
+      } else {
+        console.log(JSON.stringify(result, null, 2))
+        res.render('index', { booksArr: result, user: req.user })
+      }
+    })
+    .catch(error => {
+      res.status(400).send(error)
+      console.log(error)
+    })
+
 });
 
 module.exports = router;
