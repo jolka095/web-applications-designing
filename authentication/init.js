@@ -1,17 +1,24 @@
 const passport = require('passport');
+const Sequelize = require('sequelize');
 const LocalStrategy = require('passport-local').Strategy;
 
 const authenticationMiddleware = require('./middleware');
-const db = require('../db');
+const db =  require('../db');
+const User = require('../models/user');
 
 passport.serializeUser(function(user, done){
     done(null, user.idusers);
 });
 
-passport.deserializeUser(function(user, done){
-    db.query("SELECT * FROM users WHERE idusers=" + user, function (err, user){
-        done(err, user);
-    });
+passport.deserializeUser(function(iduser, done){
+    db.user.findById(iduser)
+        .then(result=>{
+            done(null, result.get());
+        })
+        .catch(error => {
+                res.status(400).send(error);
+                console.log(error);
+        });
 });
 
 function initPassport() {
@@ -27,25 +34,23 @@ function initPassport() {
                 return done(null, false);
             }
 
-            const sql = `SELECT * FROM users WHERE email="${req.body.email}" and password="${req.body.password}";`;
+            db.user.findOne({
+                where: {email: username, password: password}
+            })
+                .then(result=>{
+                    var encPassword = result.email;
+                    var dbPassword = result.password;
 
-            db.query(sql, function (err, result) {
+                    if (!(dbPassword === encPassword)) {
+                        return done(null, false);
+                    }
 
-                if (err) return done(err);
-
-                if (!result.length) {
-                    return done(null, false);
-                }
-
-                var encPassword = req.body.password;
-                var dbPassword = result[0].password;
-
-                if (!(dbPassword === encPassword)) {
-                    return done(null, false);
-                }
-
-                return done(null, result[0]);
-            });
+                    return done(null, result.get());
+                })
+                .catch(error => {
+                    res.status(400).send(error);
+                    console.log(error);
+                });
         }
     ));
 
