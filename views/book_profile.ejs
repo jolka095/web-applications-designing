@@ -77,7 +77,7 @@
 
                         <div class="author"> <br>autorstwa 
                             <a href="/authors/<%= book.author_id %>/<%= book.author %>">
-                                <%= book.author %>
+                                <%= book.author.name + " " + book.author.last_name %>
                             </a>
                         </div>
 
@@ -202,11 +202,8 @@
                             </button>
 
                             <p class="text-justify collapse" id="footwear">
-                                Wydano
-                                <%= (book.publish_date).getDate(); %>.
-                                <%if ((book.publish_date).getMonth() + 1 < 10) { %> 0 <% } %>
-                                <%= 1+(book.publish_date).getMonth(); %>. <%= (book.publish_date).getFullYear(); %>
-
+                                Wydano <%= book.publish_date %>
+                                
                                 przez                       <%= book.publisher %>.
                                 <br> Numer referncyjny:     <%= book.ISBN %>.
                                 <br>Tytuł oryginalny:       <%= book.original_title %>.
