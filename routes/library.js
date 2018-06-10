@@ -1,20 +1,26 @@
 const express = require('express');
+const Sequelize = require('sequelize');
 const auth = require('../authentication/middleware');
 const db = require('../db');
+const Book = require('../models/book');
+const BookStatus = require('../models/book_status');
+const User = require('../models/user');
 const router = express.Router();
 
 router.get('/', auth(), function (req, res) {
 
-    const queryStatement = `SELECT * FROM users natural join book_status natural join books natural join book_info WHERE idusers = "${req.user[0].idusers}"; `;
-
-    db.query(queryStatement, (error, result) => {
-        
-        if (result === null || result === undefined || result.length === 0) {
-            res.render('library', { booksArr: null, user: req.user })
-        } else {
-            res.render('library', { booksArr: result, user: req.user })
-        }
+    db.user.findAll({
+        where: {idusers: req.user.idusers},
+        include: [{model: db.book, include: [db.book_status]}]
     })
+        .then(result=>{
+            res.render('library', { booksArr: result.get(), user: req.user })
+        })
+        .catch(error => {
+            res.render('library', { booksArr: null, user: req.user })
+            res.status(400).send(error);
+            console.log(error);
+        });
 });
 
 module.exports = router;
