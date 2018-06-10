@@ -18,7 +18,7 @@ passport.deserializeUser(function(iduser, done){
         .catch(error => {
                 res.status(400).send(error);
                 console.log(error);
-        });
+            });
 });
 
 function initPassport() {
@@ -40,10 +40,6 @@ function initPassport() {
                 .then(result=>{
                     var encPassword = result.email;
                     var dbPassword = result.password;
-
-                    if (!(dbPassword === encPassword)) {
-                        return done(null, false);
-                    }
 
                     return done(null, result.get());
                 })
