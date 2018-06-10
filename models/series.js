@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-const Author = require('./author');
 
 module.exports = (sequelize, DataTypes) => {
     const Series = sequelize.define('series', {
@@ -7,29 +6,19 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false,
-            name: "seriesId"
+            allowNull: false
         },
         series_name: {
             type: Sequelize.STRING,
-            allowNull: false,
-            name: "seriesName"
-        },
-        idauthors: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: Author,
-                key: 'authorId',
-            }
+            allowNull: false
         },
         how_many_in_series: {
             type: Sequelize.INTEGER,
             name: "bookAmountInSeries"
         }
     }, {
-        timestamps: false,
-        tableName: "series"
-    });
+            tableName: "series"
+        });
 
     return Series;
 }

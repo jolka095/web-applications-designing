@@ -76,26 +76,26 @@
                         </div>
 
                         <div class="author"> <br>autorstwa 
-                            <a href="/authors/<%= book.author_id %>/<%= book.author %>">
+                            <a href="/authors/<%= book.author_id %>/<%= book.author.name + "_" + book.author.last_name %>">
                                 <%= book.author.name + " " + book.author.last_name %>
                             </a>
                         </div>
 
                         <div class="series">
-                            <%if (book.series !== undefined && book.series !== null) { %>
+                            <%if (book.book_series !== undefined && book.book_series !== null && book.book_series.length > 0) { %>
                                 Seria:
-                                <a href="/series/<%= book.series_id %>/<%= book.series %>">
-                                    <%= book.series %>
+                                <a href="/series/<%= book.book_series[0].idseries %>/<%= book.book_series[0].series.series_name %>">
+                                    <%= book.book_series[0].series.series_name %>
                                 </a> tom
-                                <%= book.vol_in_series %>
+                                <%= book.book_series[0].vol_in_series %>
                                     <br>
                                     <br>
                                     <% } %>
                         </div>
 
                         <div class="category"> Z kategorii:
-                            <a href="/categories/<%= book.category_id %>/<%= book.category %>">
-                                <%= book.category %>
+                            <a href="/categories/<%= book.idcategories %>/<%= book.category.name %>">
+                                <%= book.category.name %>
                             </a>
                         </div>
 
@@ -205,7 +205,7 @@
                                 Wydano <%= book.publish_date %>
                                 
                                 przez                       <%= book.publisher %>.
-                                <br> Numer referncyjny:     <%= book.ISBN %>.
+                                <br> Numer referncyjny:     <%= book.ID_NUMBER %>.
                                 <br>Tytuł oryginalny:       <%= book.original_title %>.
                             </p>
 

@@ -6,8 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false,
-            name: "authorId"
+            allowNull: false
         },
         name: {
             type: Sequelize.STRING,
@@ -18,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
         }, {
-            timestamps: false,
             tableName: "authors"
     });
 

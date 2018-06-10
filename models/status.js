@@ -6,8 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false,
-            name: "statusId" // needed?
+            allowNull: false
 
         },
         status: {
@@ -16,9 +15,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-        timestamps: false,
-        tableName: "status"
-    });
+            tableName: "status"
+        });
 
     return Status;
 }

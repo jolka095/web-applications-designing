@@ -6,20 +6,15 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false,
-            name: "categoryId"
+            allowNull: false
         },
         name: {
             type: Sequelize.STRING,
             defaultValue: null
         }
     }, {
-        timestamps: false,
-        tableName: "categories"
-    });
+            tableName: "categories"
+        });
 
     return Category;
 }
-// Category.associate = function (models) {
-    // Category.hasMany(Book, { as: "category", foreignKey: "categoryId"})
-// }
