@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const auth = require('../authentication/middleware');
+const Sequelize = require('sequelize');
 const db = require('../db');
 
 // empty profile
@@ -14,7 +15,23 @@ router.get('/:book_id', (req, res, next) => {
         where: {
             idbooks: req.params.book_id,
         },
-        include: [db.author, db.category, db.book_marks, db.book_series, db.book_status]
+
+        include: [
+            db.author,
+            db.category,
+            {
+                model: db.book_marks,
+                include: [db.mark]
+            },
+            {
+                model: db.book_series,
+                include: [db.series]
+            },
+            {
+                model: db.book_status,
+                include: [db.status]
+            }
+        ]
     })
         .then(result => {
 
