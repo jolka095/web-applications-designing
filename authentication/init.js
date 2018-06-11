@@ -4,7 +4,6 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const authenticationMiddleware = require('./middleware');
 const db =  require('../db');
-const User = require('../models/user');
 
 passport.serializeUser(function(user, done){
     done(null, user.idusers);
@@ -35,13 +34,14 @@ function initPassport() {
             }
 
             db.user.findOne({
-                where: {email: username, password: password}
+                where: {email: username, password: password},
+                raw: true
             })
                 .then(result=>{
                     var encPassword = result.email;
                     var dbPassword = result.password;
 
-                    return done(null, result.get());
+                    return done(null, result);
                 })
                 .catch(error => {
                     res.status(400).send(error);
