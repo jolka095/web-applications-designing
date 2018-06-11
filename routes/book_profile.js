@@ -11,36 +11,27 @@ router.get('/', (req, res, next) => {
 
 router.get('/:book_id', (req, res, next) => {
 
-    db.book.findAll({
+    db.book.findOne({
         where: {
             idbooks: req.params.book_id,
         },
-
+/*
         include: [
-            db.author,
             db.category,
-            {
-                model: db.book_marks,
-                include: [db.mark]
-            },
-            {
-                model: db.book_series,
-                include: [db.series]
-            },
-            {
-                model: db.book_status,
-                include: [db.status]
-            }
-        ]
+            db.book_marks,
+            db.book_series,
+            db.book_status
+        ],*/
+        raw: true
     })
         .then(result => {
 
             if (result === null || result === undefined || result.length === 0) {
                 res.send("Nie znaleziono takiej ksiażki w bazie");
             } else {
-                console.log(JSON.stringify(result, null, 2));
-                console.log(req.params)
-                res.render('book_profile', { book: result[0], user: null })
+                //console.log(JSON.stringify(result, null, 2));
+                //console.log(req.params)
+                res.render('book_profile', { book: result, user: null })
             }
         })
         .catch(error => {

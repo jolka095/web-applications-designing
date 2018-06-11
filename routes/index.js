@@ -5,6 +5,7 @@ const auth = require('../authentication/middleware');
 const db = require('../db');
 
 // import Sequelize models
+/*
 const User = require('../models/user');
 const Status = require('../models/status');
 const Series = require('../models/series');
@@ -15,10 +16,10 @@ const Book = require('../models/book');
 const BookStatus = require('../models/book_status');
 const BookSeries = require('../models/book_series');
 const BookMark = require('../models/book_marks');
+*/
 
 // finding books version edvanced 3
 router.post('/find', (req, res) => {
-
 
   console.log(JSON.stringify(req.body, null, 2));
 
