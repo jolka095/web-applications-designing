@@ -15,9 +15,9 @@ passport.deserializeUser(function(iduser, done){
             done(null, result.get());
         })
         .catch(error => {
-                res.status(400).send(error);
-                console.log(error);
-            });
+            console.log(error);
+            res.status(400).send(error);
+        });
 });
 
 function initPassport() {
@@ -44,8 +44,8 @@ function initPassport() {
                     return done(null, result);
                 })
                 .catch(error => {
-                    res.status(400).send(error);
                     console.log(error);
+                    res.status(400).send(error);
                 });
         }
     ));
