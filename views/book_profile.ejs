@@ -76,26 +76,26 @@
                         </div>
 
                         <div class="author"> <br>autorstwa 
-                            <a href="/authors/<%= book.author_id %>/<%= book.author.name + "_" + book.author.last_name %>">
-                                <%= book.author.name + " " + book.author.last_name %>
+                            <a href="/authors/<%= book.author_id %>/<%= book.idauthors %>">
+                                <%= book.publisher %>
                             </a>
                         </div>
 
                         <div class="series">
-                            <%if (book.book_series !== undefined && book.book_series !== null && book.book_series.length > 0) { %>
+                            <%if (book.series !== undefined && book.series !== null) { %>
                                 Seria:
-                                <a href="/series/<%= book.book_series[0].idseries %>/<%= book.book_series[0].series.series_name %>">
-                                    <%= book.book_series[0].series.series_name %>
+                                <a href="/series/<%= book.series_id %>/<%= book.series %>">
+                                    <%= book.series %>
                                 </a> tom
-                                <%= book.book_series[0].vol_in_series %>
+                                <%= book.vol_in_series %>
                                     <br>
                                     <br>
                                     <% } %>
                         </div>
 
                         <div class="category"> Z kategorii:
-                            <a href="/categories/<%= book.idcategories %>/<%= book.category.name %>">
-                                <%= book.category.name %>
+                            <a href="/categories/<%= book.category_id %>/<%= book.category %>">
+                                <%= book.category %>
                             </a>
                         </div>
 
