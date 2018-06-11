@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false
+            allowNull: false,
+            name: "userId"
         },
         email: {
             type: Sequelize.STRING,
@@ -26,8 +27,8 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null
         }
     }, {
-            tableName: "users"
-        });
+        tableName: "users"
+    });
 
     return User;
 }

@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
         idmarks: {
             type: Sequelize.INTEGER,
             primaryKey: true,
-            allowNull: false
+            allowNull: false,
+            name: "markId"
         },
         value: {
             type: Sequelize.INTEGER,
@@ -13,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {
-            tableName: "marks"
-        });
+        tableName: "marks"
+    });
 
     return Mark;
 }
