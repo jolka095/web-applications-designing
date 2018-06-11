@@ -10,10 +10,15 @@ router.get('/:book_id', function (req, res, next) {
 
 
 router.get('/', function (req, res, next) {
-
-  const queryStatement = `SELECT * FROM book_info; `;
-  const queryStatement2 = `SELECT * FROM categories; `;
-
+    db.book_info.findAll()
+        .then(result => {
+            console.log(result);
+        })
+        .catch(error => {
+            //res.send("Nie znaleziono książek w bazie")
+            res.status(400).send(error);
+            console.log(error);
+        });
   db.book_info.findAll()
       .then(result => {
           db.category.findAll()
