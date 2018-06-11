@@ -11,12 +11,7 @@ router.get('/', auth(), function (req, res, next) {
         where:{email: req.user.email}
     })
         .then(result => {
-            if (result === null || result === undefined) {
-                res.render("Nie znaleziono takiego użytkownika")
-            }
-            else {
-                res.render('user-profile', { userData: result.get(), user: req.user})
-            }
+            res.render('user-profile', { username: result.username, email: result.email, user: req.user})
         })
         .catch(error => {
             res.status(400).send(error);
