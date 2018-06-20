@@ -13,18 +13,15 @@ router.get('/:book_id', (req, res, next) => {
 
     db.book.findOne({
         where: {
-            idbooks: req.params.book_id,
+            idBook: req.params.book_id,
         },
-/*
+
         include: [
-            db.category,
-            db.book_marks,
-            db.book_series,
-            db.book_status
-        ],*/
+            db.author,
+        ],
         raw: true
     })
-        .then(result => {
+        .then(result=>{
 
             if (result === null || result === undefined || result.length === 0) {
                 res.send("Nie znaleziono takiej ksiażki w bazie");

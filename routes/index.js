@@ -53,66 +53,95 @@ router.post('/find', (req, res) => {
   console.log(sql_query);
 
   //Here maybe???---------------------------
-  db.book.query(`SELECT book_id FROM book_info WHERE title="${item}"`, function (err, rows, fields) {
-
-    if (typeof rows !== 'undefined' && rows.length > 0) {
-      id = rows[0].book_id;
-      // console.log('id : ', id)
-      res.redirect(`/book_profile/${id}`);
-    }
-    else {
-      console.log("\nSzukam dalej po autorze...");
-      db.query(`SELECT author_id FROM book_info WHERE author="${item}"`, function (err, rows, fields) {
-
-        if (typeof rows !== 'undefined' && rows.length > 0) {
-          id = rows[0].author_id;
-          // console.log('id : ', id)
-          res.redirect(`/authors/${id}/${item}`);
+  db.book.findAll({where: {book: item}, raw: true})
+    .then(result1=>{
+        if (typeof result1 !== 'undefined' && result1.length > 0) {
+            id = result1[0].idBook;
+            // console.log('id : ', id)
+            res.redirect(`/book_profile/${id}`);
         }
         else {
-          console.log("\nSzukam dalej po kategorii...");
-          db.query(`SELECT category_id FROM book_info WHERE category="${item}"`, function (err, rows, fields) {
-
-            if (typeof rows !== 'undefined' && rows.length > 0) {
-              id = rows[0].category_id;
-              // console.log('id : ', id)
-              res.redirect(`/categories/${id}/${item}`);
-            }
-            else {
-              console.log("\nSzukam dalej po serii...");
-              db.query(`SELECT series_id FROM book_info WHERE series="${item}"`, function (err, rows, fields) {
-
-                if (typeof rows !== 'undefined' && rows.length > 0) {
-                  id = rows[0].series_id;
-                  // console.log('id : ', id)
-                  res.redirect(`/series/${id}/${item}`);
-                }
-                else {
-                  db.query(sql_query, function (err, rows, fields) {
-                    if (typeof rows !== 'undefined' && rows.length > 0) {
-                      res.render(`results`, { booksArr: rows, what: item, user: req.user })
-                    }
-                    else {
-                      console.log("\nBrak wyników...");
-                      res.redirect(`/no_results/${item}`);
-                    }
-                  })
-                }
-              })
-            }
-          })
+            console.log("\nSzukam dalej po autorze...");
+            db.book.findAll({where: {idAuthor: item}, raw: true})
+              .then(result2=>{
+                  if (typeof result2 !== 'undefined' && result2.length > 0) {
+                      id = result2[0].idAuthor;
+                      // console.log('id : ', id)
+                      res.redirect(`/authors/${id}/${item}`);
+                  }
+                  else {
+                      console.log("\nSzukam dalej po kategorii...");
+                      db.book.findAll({where: {category:item}, raw: true})
+                        .then(result3=>{
+                          if (typeof result3 !== 'undefined' && result3.length > 0) {
+                              id = result3[0].category;
+                              // console.log('id : ', id)
+                              res.redirect(`/categories/${id}/${item}`);
+                          }
+                          else {
+                              console.log("\nSzukam dalej po serii...");
+                              db.series.findAll({where: {idSeries: item}, raw: true})
+                                .then(results4=>{
+                                  if (typeof results4 !== 'undefined' && results4.length > 0) {
+                                      id = results4[0].idSeries;
+                                      // console.log('id : ', id)
+                                      res.redirect(`/series/${id}/${item}`);
+                                  }
+                                  else {
+                                      db.book.findAll({
+                                          order: [
+                                            // Will escape title and validate DESC against a list of valid direction parameters
+                                            ['title', 'DESC'],
+                                            [Author, 'idAuthor', 'DESC'],
+                                          ],
+                                          raw: true
+                                      })
+                                        .then(result5=>{
+                                          if (typeof result5 !== 'undefined' && result5.length > 0) {
+                                                  res.render(`results`, { booksArr: result5, what: item, user: req.user })
+                                          }
+                                          else {
+                                              console.log("\nBrak wyników...");
+                                              res.redirect(`/no_results/${item}`);
+                                          }
+                                        })
+                                        .catch(error5 => {
+                                            console.log(error5);
+                                            res.status(400).send(error5);
+                                        });
+                                  }
+                              })
+                              .catch(error4 => {
+                                  console.log(error4);
+                                  res.status(400).send(error4);
+                              });
+                            }
+                        })
+                        .catch(error3 => {
+                            console.log(error3);
+                            res.status(400).send(error3);
+                        });
+                  }
+            })
+            .catch(error2 => {
+                console.log(error2);
+                res.status(400).send(error2);
+            });
         }
-      })
-    }
-  })
+    })
+    .catch(error1 => {
+      console.log(error1);
+      res.status(400).send(error1);
+    });
 });
 
 //??????????????????????
 router.get('/', function (req, res, next) {
   db.book.findAll({
-      limit: 4
+      limit: 4,
+      raw: true
     })
-    .then(result => {
+    .then(result=>{
       if (result === null || result === undefined || result.length === 0) {
         res.send("Nie znaleziono żadnych kategorii w bazie");
       } else {
@@ -121,8 +150,8 @@ router.get('/', function (req, res, next) {
       }
     })
     .catch(error => {
-      res.status(400).send(error);
-      console.log(error);
+        console.log(error);
+        res.status(400).send(error);
     });
 
 });
