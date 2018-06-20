@@ -1,34 +1,39 @@
 const Sequelize = require('sequelize');
-const Category = require('./category');
 const Author = require('./author');
 
 module.exports = (sequelize, DataTypes) => {
     const Book = sequelize.define('books', {
-        idbooks: {
-            type: Sequelize.INTEGER,
+        idBook: {
+            type: Sequelize.INTEGER(10).UNSIGNED,
             primaryKey: true,
+            unique: true,
+            autoIncrement: true,
             allowNull: false,
             name: "bookId"
         },
-        title: {
+
+        idAuthor: {
+            type: Sequelize.INTEGER(10).UNSIGNED,
+            allowNull: false,
+            references: {
+                model: Author,
+                key: 'authorId',
+            }
+        },
+
+        addDate: {
+            type: Sequelize.DATE,
+            allowNull: true
+        },
+        book: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        publish_date: {
-            type: Sequelize.DATE,
+        category: {
+            type: Sequelize.STRING,
             allowNull: false
-        },
-        add_date: {
-            type: Sequelize.DATE
         },
         ID_NUMBER: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-        publisher: {
-            type: Sequelize.STRING
-        },
-        synopsis: {
             type: Sequelize.STRING,
             allowNull: false
         },
@@ -36,31 +41,29 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.STRING,
             allowNull: false
         },
+        lang: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        originalTitle: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        publisher: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        releaseDate: {
+            type: Sequelize.DATE,
+            allowNull: false
+        },
+        synopsis: {
+            type: Sequelize.TEXT,
+            allowNull: false
+        },
         text: {
-            type: Sequelize.STRING
-        },
-        original_title: {
             type: Sequelize.STRING,
-            allowNull: false
-        },
-        language: {
-            type: Sequelize.STRING,
-            allowNull: false
-        },
-
-        idcategories: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: Category,
-                key: 'categoryId',
-            }
-        },
-        idauthors: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: Author,
-                key: 'authorId',
-            }
+            allowNull: true
         }
     }, {
         tableName: "books"

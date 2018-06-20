@@ -3,18 +3,19 @@ const Book = require('./book');
 const User = require('./user');
 
 module.exports = (sequelize, DataTypes) => {
-    const Mark = sequelize.define('marks', {
-        idMark: {
-            type: Sequelize.INTEGER(10).UNSIGNED,
+    const Statuses = sequelize.define('statuses', {
+        idStat: {
+            type: Sequelize.INTEGER(11).UNSIGNED,
             primaryKey: true,
             unique: true,
             autoIncrement: true,
             allowNull: false,
-            name: "markId"
+            name: "statusId" // needed?
+
         },
 
         idBook: {
-            type: Sequelize.INTEGER(10).UNSIGNED,
+            type: Sequelize.INTEGER(11).UNSIGNED,
             allowNull: false,
 
             references: {
@@ -23,26 +24,29 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         idUser: {
-            type: Sequelize.INTEGER(10).UNSIGNED,
+            type: Sequelize.INTEGER(11).UNSIGNED,
             allowNull: false,
-
             references: {
                 model: User,
-                key: 'userId',
+                key: 'authorId',
             }
         },
 
-        mark: {
-            type: Sequelize.INTEGER(1).UNSIGNED,
+        stat: {
+            type: Sequelize.STRING,
             allowNull: false
         },
-        markDate: {
+        pageNumber: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        lastUsed: {
             type: Sequelize.DATE,
             allowNull: true
         }
     }, {
-        tableName: "marks"
+        tableName: "statuses"
     });
 
-    return Mark;
+    return Statuses;
 }

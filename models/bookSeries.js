@@ -1,18 +1,17 @@
 const Sequelize = require('sequelize');
 const Book = require('./book');
-const User = require('./user');
+const Series = require('./series');
 
 module.exports = (sequelize, DataTypes) => {
-    const Mark = sequelize.define('marks', {
-        idMark: {
+    const BookSeries = sequelize.define('bookseries', {
+        idBookSeries: {
             type: Sequelize.INTEGER(10).UNSIGNED,
             primaryKey: true,
             unique: true,
             autoIncrement: true,
             allowNull: false,
-            name: "markId"
+            name: "bookSeriesId"
         },
-
         idBook: {
             type: Sequelize.INTEGER(10).UNSIGNED,
             allowNull: false,
@@ -22,27 +21,22 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'bookId',
             }
         },
-        idUser: {
+        idSeries: {
             type: Sequelize.INTEGER(10).UNSIGNED,
             allowNull: false,
 
             references: {
-                model: User,
-                key: 'userId',
+                model: Series,
+                key: 'seriesId',
             }
         },
-
-        mark: {
-            type: Sequelize.INTEGER(1).UNSIGNED,
+        booksNumber: {
+            type: Sequelize.INTEGER(2).UNSIGNED,
             allowNull: false
-        },
-        markDate: {
-            type: Sequelize.DATE,
-            allowNull: true
         }
     }, {
-        tableName: "marks"
+        tableName: "bookseries"
     });
 
-    return Mark;
+    return BookSeries;
 }

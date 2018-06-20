@@ -2,22 +2,31 @@ const Sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
     const Author = sequelize.define('authors', {
-        idauthors: {
-            type: Sequelize.INTEGER,
+        idAuthor: {
+            type: Sequelize.INTEGER(10).UNSIGNED,
             primaryKey: true,
+            unique: true,
             autoIncrement: true,
             allowNull: false,
             name: "authorId"
+        },
+        about: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
+        authorDate: {
+            type: Sequelize.DATE,
+            allowNull: true
         },
         name: {
             type: Sequelize.STRING,
             allowNull: false
         },
-        last_name: {
+        surname: {
             type: Sequelize.STRING,
             allowNull: false
         }
-        }, {
+    }, {
             tableName: "authors"
     });
 

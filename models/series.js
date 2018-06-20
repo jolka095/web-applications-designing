@@ -3,28 +3,33 @@ const Author = require('./author');
 
 module.exports = (sequelize, DataTypes) => {
     const Series = sequelize.define('series', {
-        idseries: {
-            type: Sequelize.INTEGER,
+        idSeries: {
+            type: Sequelize.INTEGER(10).UNSIGNED,
             primaryKey: true,
+            unique: true,
             autoIncrement: true,
             allowNull: false,
             name: "seriesId"
         },
-        series_name: {
-            type: Sequelize.STRING,
+
+        idAuthor: {
+            type: Sequelize.INTEGER(10).UNSIGNED,
             allowNull: false,
-            name: "seriesName"
-        },
-        idauthors: {
-            type: Sequelize.INTEGER,
             references: {
                 model: Author,
                 key: 'authorId',
             }
         },
-        how_many_in_series: {
-            type: Sequelize.INTEGER,
-            name: "bookAmountInSeries"
+
+        series: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            name: "seriesName"
+        },
+        volumesNumber: {
+            type: Sequelize.INTEGER(2).UNSIGNED,
+            allowNull: true,
+            name: "seriesVolume"
         }
     }, {
         tableName: "series"
