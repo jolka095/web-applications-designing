@@ -12,7 +12,7 @@
                 <div class="row">
 
                     <div class="col-md-4 ">
-                        <%if (user) { %> <a href="/book_read/<%= book.book_id %>"  title="Czytaj >>">
+                        <%if (user) { %> <a href="/book_read/<%= book.idBook %>"  title="Czytaj >>">
                             <img class="img-fluid mx-auto d-block" src="/<%= book.image %>" alt="book cover">
                         </a> %> <% } else { %>
                             <img class="img-fluid mx-auto d-block" src="/<%= book.image %>" alt="book cover">
@@ -23,10 +23,10 @@
                             <div class="dropdown show text-center">
                                     <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Dodaj do biblioteczki </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <form action = "<%= '/book_profile/read/'+ book.book_id %>"  method = "POST">
+                                        <form action = "<%= '/book_profile/read/'+ book.idBook %>"  method = "POST">
                                         <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane</button>
                                         </form>
-                                        <form action = "<%= '/book_profile/add_to_read/'+ book.book_id %>"  method = "POST">
+                                        <form action = "<%= '/book_profile/add_to_read/'+ book.idBook %>"  method = "POST">
                                         <button class="dropdown-item btn btn-secondary fa fa-plus-circle" type="submit" id="chce_przeczytac"> Chcę przeczytać</button>
                                         </form>
                                     </div>
@@ -37,10 +37,10 @@
                                 <div class="dropdown show text-center">
                                     <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <!-- <form action = "<%= '/book_profile/read/'+ book.book_id %>"  method = "POST">
+                                        <!-- <form action = "<%= '/book_profile/read/'+ book.idBook %>"  method = "POST">
                                         <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane </button>
                                         </form> -->
-                                        <form action = "<%= '/book_profile/read/remove/'+ book.book_id %>"  method = "POST">
+                                        <form action = "<%= '/book_profile/read/remove/'+ book.idBook %>"  method = "POST">
                                         <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
                                         </form>
                                     </div>
@@ -55,10 +55,10 @@
                                 <div class="dropdown show text-center">
                                     <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień status </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <form action = "<%= '/book_profile/read/'+ book.book_id %>"  method = "POST">
+                                        <form action = "<%= '/book_profile/read/'+ book.idBook %>"  method = "POST">
                                         <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane </button>
                                         </form>
-                                        <form action = "<%= '/book_profile/add_to_read/remove/'+ book.book_id %>"  method = "POST">
+                                        <form action = "<%= '/book_profile/add_to_read/remove/'+ book.idBook %>"  method = "POST">
                                         <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
                                         </form>
                                     </div>
@@ -69,19 +69,19 @@
                         <!-- <div class="btn-group" role="group"> -->
                     </div>
 
-                    <div id="book_info" class="col-md-8 text-left card ">
+                    <div-- id="book_info" class="col-md-8 text-left card ">
 
                         <div class="title">
                             <strong> <i> <%= book.title %> </i> </strong>
                         </div>
 
                         <div class="author"> <br>autorstwa 
-                            <a href="/authors/<%= book.author_id %>/<%= book.idauthors %>">
+                            <a href="/authors/<%= book.idAuthor %>/<%= book.idAuthor %>">
                                 <%= book.publisher %>
                             </a>
                         </div>
 
-                        <div class="series">
+                        <!-- fix.me div class="series">
                             <%if (book.series !== undefined && book.series !== null) { %>
                                 Seria:
                                 <a href="/series/<%= book.series_id %>/<%= book.series %>">
@@ -91,23 +91,23 @@
                                     <br>
                                     <br>
                                     <% } %>
-                        </div>
+                        </div-->
 
                         <div class="category"> Z kategorii:
-                            <a href="/categories/<%= book.category_id %>/<%= book.category %>">
+                            <a href="/categories/<%= book.category %>">
                                 <%= book.category %>
                             </a>
                         </div>
 
                         <div class="language"> Dostępna w języku:
-                                <a href="/languages/<%= book.language %>">
-                                    <%= book.language %>
+                                <a href="/languages/<%= book.lang %>">
+                                    <%= book.lang %>
                                 </a>
                                 <br>
                                 <br>
                         </div>
 
-                        <div class="rating inline-block" id="ratingStars">
+                        <!-- fix.me div class="rating inline-block" id="ratingStars">
                             <%if (Math.round(book.avg_mark) == 0) { %>
                             <i aria-hidden="true" class="fa fa-star-o"></i>
                             <i aria-hidden="true" class="fa fa-star-o"></i>
@@ -155,7 +155,7 @@
                                 <%if (mark !== undefined && mark !== null && mark == 10) { %>
 
                                 <br><br>
-                                <form action="<%= '/book_profile/rate_book/'+ book.book_id + '/user/'+ user.idusers %>" method="POST" id="ratingForm">
+                                <form action="<%= '/book_profile/rate_book/'+ book.idBook + '/user/'+ user.idUser %>" method="POST" id="ratingForm">
                                     <!-- <label>Oceń książkę:</label> -->
                                     <select name="mark" id="ratingSelect" class="form-control" onchange='this.form.submit()' style="max-width: 150px;">
                                         <option selected disabled> Oceń książkę </option>
@@ -171,7 +171,7 @@
                                 <% } else { %>
                                    <br> Twoja ocena to: <%=  mark - 1 %>
                                    <br><br>
-                                <form action="<%= '/book_profile/rate_book/'+ book.book_id + '/user/'+ user.idusers %>" method="POST" id="ratingForm">
+                                <form action="<%= '/book_profile/rate_book/'+ book.idBook + '/user/'+ user.idUser %>" method="POST" id="ratingForm">
                                     <!-- <label>Oceń książkę:</label> -->
                                     <select name="mark" id="ratingSelect" class="form-control" onchange='this.form.submit()' style="max-width: 150px;">
                                         <option selected disabled> Zmień ocenę: </option>
@@ -188,7 +188,7 @@
                                  <% } %>
                                  <% } %>
                             <% } %>
-                        </div>
+                        </div-->
 
                         <div class="synopsis text-justify">
                             <%= book.synopsis %>
@@ -202,11 +202,11 @@
                             </button>
 
                             <p class="text-justify collapse" id="footwear">
-                                Wydano <%= book.publish_date %>
+                                Wydano <%= book.releaseDate %>
                                 
                                 przez                       <%= book.publisher %>.
                                 <br> Numer referncyjny:     <%= book.ID_NUMBER %>.
-                                <br>Tytuł oryginalny:       <%= book.original_title %>.
+                                <br>Tytuł oryginalny:       <%= book.originalTitle %>.
                             </p>
 
                         </div>
