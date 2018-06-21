@@ -27,14 +27,12 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `idUser` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(45) NOT NULL,
-  `login` varchar(45) NOT NULL,
   `name` varchar(45) NOT NULL,
   `surname` varchar(45) NOT NULL,
   `passwrd` varchar(45) NOT NULL,
   PRIMARY KEY (`idUser`),
   UNIQUE KEY `iduser_UNIQUE` (`idUser`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
-  UNIQUE KEY `login_UNIQUE` (`login`)
+  UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -44,7 +42,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'anna.pol@wp.pl','Ania','qwerty','Ania','Kowalski'),(2,'karol_graczyk','Karolek','qwerty','Karol','Wojtek');
+INSERT INTO `users` VALUES (1,'anna.pol@wp.pl','Ania','Kowalski','qwerty'),(2,'karol_graczyk','Karol','Wojtek','qwerty');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-20 21:15:34
+-- Dump completed on 2018-06-21 19:23:16
