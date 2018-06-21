@@ -9,8 +9,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             unique: true,
             autoIncrement: true,
-            allowNull: false,
-            name: "bookSeriesId"
+            allowNull: false
         },
         idBook: {
             type: Sequelize.INTEGER(10).UNSIGNED,
@@ -34,9 +33,11 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.INTEGER(2).UNSIGNED,
             allowNull: false
         }
-    }, {
-        tableName: "bookseries"
-    });
+    },
+        {
+            tableName: "bookseries"
+        }
+    )
 
     return BookSeries;
 }

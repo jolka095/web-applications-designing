@@ -8,32 +8,25 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             unique: true,
             autoIncrement: true,
-            allowNull: false,
-            name: "seriesId"
+            allowNull: false
         },
 
-        idAuthor: {
-            type: Sequelize.INTEGER(10).UNSIGNED,
-            allowNull: false,
-            references: {
-                model: Author,
-                key: 'authorId',
-            }
-        },
+        // idAuthor automatically is generated 
+        // see: db.js -> relations definitions
 
         series: {
             type: Sequelize.STRING,
-            allowNull: false,
-            name: "seriesName"
+            allowNull: false
         },
         volumesNumber: {
             type: Sequelize.INTEGER(2).UNSIGNED,
-            allowNull: true,
-            name: "seriesVolume"
+            allowNull: true
         }
-    }, {
-        tableName: "series"
-    });
+    },
+        {
+            tableName: "series"
+        }
+    )
 
     return Series;
 }

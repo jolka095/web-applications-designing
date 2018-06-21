@@ -9,28 +9,12 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             unique: true,
             autoIncrement: true,
-            allowNull: false,
-            name: "markId"
+            allowNull: false
         },
 
-        idBook: {
-            type: Sequelize.INTEGER(10).UNSIGNED,
-            allowNull: false,
-
-            references: {
-                model: Book,
-                key: 'bookId',
-            }
-        },
-        idUser: {
-            type: Sequelize.INTEGER(10).UNSIGNED,
-            allowNull: false,
-
-            references: {
-                model: User,
-                key: 'userId',
-            }
-        },
+        // idBook automatically is generated 
+        // idUser automatically is generated 
+        // see: db.js -> relations definitions
 
         mark: {
             type: Sequelize.INTEGER(1).UNSIGNED,
@@ -40,9 +24,11 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.DATE,
             allowNull: true
         }
-    }, {
-        tableName: "marks"
-    });
+    },
+        {
+            tableName: "marks"
+        }
+    )
 
     return Mark;
 }

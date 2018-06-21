@@ -8,19 +8,8 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             unique: true,
             autoIncrement: true,
-            allowNull: false,
-            name: "bookId"
+            allowNull: false
         },
-
-        idAuthor: {
-            type: Sequelize.INTEGER(10).UNSIGNED,
-            allowNull: false,
-            references: {
-                model: Author,
-                key: 'authorId',
-            }
-        },
-
         addDate: {
             type: Sequelize.DATE,
             allowNull: true
@@ -65,10 +54,18 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.STRING,
             allowNull: true
         }
-    }, {
-        tableName: "books"
-    });
+    },
+        {
+            tableName: "books"
+        }
+    )
     return Book;
 }
 
-// Book.belongsTo(Category, { foreignKey: "categoryId"})
+// Relations are defined in db.js file that is why
+// there's no need to add here idAuthor column 
+// because Sequelize adds it automatically
+
+// Relations in db.js
+// db.author.hasMany(db.book, { foreignKey: 'idAuthor' });      // field 'idAuthor' in Book model reffers to Author model
+// db.book.belongsTo(db.author, { foreignKey: 'idAuthor' });    // 'idAuthor' attribute automatically added to Book model

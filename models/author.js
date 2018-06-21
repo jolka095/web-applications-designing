@@ -5,10 +5,8 @@ module.exports = (sequelize, DataTypes) => {
         idAuthor: {
             type: Sequelize.INTEGER(10).UNSIGNED,
             primaryKey: true,
-            unique: true,
             autoIncrement: true,
-            allowNull: false,
-            name: "authorId"
+            allowNull: false
         },
         about: {
             type: Sequelize.STRING,
@@ -26,9 +24,11 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.STRING,
             allowNull: false
         }
-    }, {
+    },
+        {
             tableName: "authors"
-    });
+        }
+    )
 
     return Author;
 }
