@@ -18,7 +18,7 @@ router.get('/', auth(), function (req, res) {
         .catch(error => {
             console.log(error);
             res.render('library', { booksArr: null, user: req.user });
-            res.status(400).send(error);
+            // res.status(400).send(error);
         });
 
 

@@ -137,9 +137,20 @@ router.post('/find', (req, res) => {
 
 //??????????????????????
 router.get('/', function (req, res, next) {
-  db.book.findAll({
-      limit: 4,
-      raw: true
+
+    db.book.findAll({
+        limit: 4,
+        // raw: true,
+
+        include: [
+            db.author,
+            db.mark,
+            db.statuses,
+            {
+                model: db.bookSeries,
+                include: [db.series]
+            }
+        ]
     })
     .then(result=>{
       if (result === null || result === undefined || result.length === 0) {

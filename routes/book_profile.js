@@ -4,12 +4,64 @@ const auth = require('../authentication/middleware');
 const Sequelize = require('sequelize');
 const db = require('../db');
 
+const getAverageMarkForBook = (marksArray) => {
+    let sum = 0;
+    let avg = 0;
+
+
+    if (marksArray == null || marksArray == undefined || marksArray == null || marksArray.length < 1) {
+        console.log("THIS BOOK DOES NOT HAVE ANY MARKS YET")
+    } else {
+        for (let i = 0; i < marksArray.length; i++) {
+            sum += marksArray[i].mark
+        }
+        avg = sum / marksArray.length
+    }
+    return avg.toFixed(2)
+}
+
+const getUserMarkForBook = (marksArray, userId) => {
+
+    let mark = null
+
+    if (userId == null || userId == undefined || marksArray == null) {
+        console.log("This user didn't mark this book or this book has no marks")
+    } else {
+        for (let i = 0; i < marksArray.length; i++) {
+            if (marksArray[i].idUser == userId) {
+                mark = marksArray[i].mark
+            }
+        }
+    }
+
+    return mark
+}
+
+const getBookStatusForUser = (statusesArr, userId) => {
+
+    let status = null
+
+    if (userId == null || userId == undefined || statusesArr.length < 1) {
+        console.log("This user didn't set status of this book or this book has no statuses")
+    } else {
+        for (let i = 0; i < statusesArr.length; i++) {
+            if (statusesArr[i].idUser == userId) {
+                status = statusesArr[i].stat
+            }
+        }
+    }
+
+    return status
+}
+
 // empty profile
 router.get('/', (req, res, next) => {
     res.redirect('/');
 });
 
 router.get('/:book_id', (req, res, next) => {
+
+    const idUser = req.user ? req.user.idUser : undefined
 
     db.book.findOne({
         where: {
@@ -18,17 +70,35 @@ router.get('/:book_id', (req, res, next) => {
 
         include: [
             db.author,
-        ],
-        raw: true
+            db.mark,
+            db.statuses,
+            {
+                model: db.bookSeries,
+                include: [db.series]
+            }
+        ]
     })
-        .then(result=>{
+        .then(result => {
 
             if (result === null || result === undefined || result.length === 0) {
                 res.send("Nie znaleziono takiej ksiażki w bazie");
             } else {
-                //console.log(JSON.stringify(result, null, 2));
-                //console.log(req.params)
-                res.render('book_profile', { book: result, user: null })
+
+                // helper object representing single book
+                const bookObject = {
+                    details: result, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
+                    author: result.author,
+                    marksArr: result.marks ? result.marks : null, // mabye to remove
+                    avgMark: getAverageMarkForBook(result.marks),
+                    userMark: getUserMarkForBook(result.marks, idUser),
+                    status: (result.statuses.length > 0) ? getBookStatusForUser(result.statuses, idUser) : null,
+                    volNumberInSeries: (result.bookseries.length > 0) ? result.bookseries[0].booksNumber : null,
+                    series: (result.bookseries.length > 0) ? result.bookseries[0].series : null
+                }
+
+                console.log(JSON.stringify(bookObject, null, 2));
+                // console.log(JSON.stringify(result, null, 2));
+                res.render('book_profile', { book: bookObject, user: req.user ? req.user : null })
             }
         })
         .catch(error => {
@@ -36,56 +106,6 @@ router.get('/:book_id', (req, res, next) => {
             console.log(error);
         });
 
-    // const queryStatement = `SELECT * FROM book_info WHERE book_id = ${req.params.book_id}; `;
-
-
-    // db.query(queryStatement, (error, result) => {
-
-    //     if (result === null || result === undefined || result.length === 0) {
-    //         //   console.log(JSON.stringify(result[0], null, 2));
-    //         const message = "Nie znaleziono takiej ksiażki w bazie";
-    //         // res.render('resource_not_found', { message: message })
-    //         res.render('page_not_found', { user: req.user })
-    //     } else {
-    //         console.log(JSON.stringify(result[0], null, 2));
-
-    //         if (req.user) {
-    //             const queryStatement3 = `SELECT * FROM book_status WHERE idbooks = ${req.params.book_id} AND idusers = ${req.user[0].idusers}; `;
-    //             db.query(queryStatement3, (error, result3) => {
-
-    //                 if (result3 === null || result3 === undefined || result3.length === 0) {
-    //                     // console.log(JSON.stringify(result2[0], null, 2));
-    //                     const message = "Nie znaleziono statusu  w bazie";
-    //                     // res.render('resource_not_found', { message: message })
-    //                     res.render('book_profile', { book: result[0], user: req.user[0], mark: 10, status: 0 }) // mark 10 gdy oceny nie ma, status 0 gdy ksiązki nie ma w biblioteczce
-
-    //                 } else {
-    //                     const queryStatement2 = `SELECT * FROM book_marks WHERE idbooks = ${req.params.book_id} AND idusers = ${req.user[0].idusers}; `;
-    //                     db.query(queryStatement2, (error, result2) => {
-
-    //                         if (result2 === null || result2 === undefined || result2.length === 0) {
-    //                             // console.log(JSON.stringify(result2[0], null, 2));
-    //                             const message = "Nie znaleziono oceny  w bazie";
-    //                             // res.render('resource_not_found', { message: message })
-    //                             res.render('book_profile', { book: result[0], user: req.user[0], mark: 10, status: result3[0].idstatus })
-
-    //                         } else {
-    //                             console.log("\nOK  ZALOGOWANY\n");
-    //                             res.render('book_profile', { book: result[0], user: req.user[0], mark: result2[0].idmarks, status: result3[0].idstatus })
-    //                         }
-
-    //                     })
-    //                 }
-
-    //             })
-
-
-    //         } else {
-    //             console.log("\nX  NIEZALOGOWANY\n");
-    //             res.render('book_profile', { book: result[0], user: null })
-    //         }
-    //     }
-    // })
 });
 
 router.post('/rate_book/:book_id/user/:user_id', (req, res, next) => {
