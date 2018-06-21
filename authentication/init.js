@@ -6,7 +6,7 @@ const authenticationMiddleware = require('./middleware');
 const db =  require('../db');
 
 passport.serializeUser(function(user, done){
-    done(null, user.idusers);
+    done(null, user.idUser);
 });
 
 passport.deserializeUser(function(iduser, done){
@@ -16,7 +16,8 @@ passport.deserializeUser(function(iduser, done){
         })
         .catch(error => {
             console.log(error);
-            res.status(400).send(error);
+            done(error, null);
+           // res.status(400).send(error);
         });
 });
 
@@ -28,24 +29,32 @@ function initPassport() {
             passReqToCallback: true
         },
 
-        function (req, username, password, done) {
-            if (!username || !password) {
+        function (req, email, password, done) {
+            if (!email || !password) {
                 return done(null, false);
             }
 
-            db.user.findOne({
-                where: {email: username, password: password},
+            db.user.findAll({
+                where: {email: email, passwrd: password},
                 raw: true
             })
                 .then(result=>{
-                    var encPassword = result.email;
-                    var dbPassword = result.password;
+                    console.log(result[0]);
+                    console.log('l: '+result[0].email +' p: '+ result[0].passwrd);
 
-                    return done(null, result);
+                    if (!result[0] && !isValidPassword(result[0].password,password)) {
+                        return done(null, false);
+                    }
+
+                    var encPassword = email;
+                    var dbPassword = password;
+
+                    return done(null, result[0]);
                 })
                 .catch(error => {
                     console.log(error);
-                    res.status(400).send(error);
+                    //res.status(400).send(error);
+                    return done(null, false, {message:error})
                 });
         }
     ));
