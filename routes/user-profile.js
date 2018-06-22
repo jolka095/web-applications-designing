@@ -14,8 +14,8 @@ router.get('/', auth(), function (req, res, next) {
             res.render('user-profile', { username: result.username, email: result.email, user: req.user})
         })
         .catch(error => {
-            res.status(400).send(error);
             console.log(error);
+            res.status(400).send(error);
         });
 
 });

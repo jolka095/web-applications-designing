@@ -22,8 +22,8 @@ router.post('/', (req, res, next) => {
     })
     .catch(error => {
         console.log(error);
-        res.status(400).send(error);
-        return next(error);
+        // res.status(400).send(error);
+        next(error)
     });
 
     db.user.create({

@@ -39,12 +39,12 @@
                             </div>
 
                             <br>
-                             <!-- <span id="goToAdvancedSearch">
-                                <i class="fa fa-angle-double-right"></i> Zaawansowane wyszukiwanie </span>-->
+                             <span id="goToAdvancedSearch">
+                                <i class="fa fa-angle-double-right"></i> Zaawansowane wyszukiwanie </span>
 
                         </form>
 
-                        <!-- Advanced search 
+                        <!-- Advanced search  -->
                         <form action="/find" method="POST" id="szukaj1_advanced" style="display:none;">
                             <div class="input-group">
 
@@ -72,7 +72,7 @@
                             <br>
                             <span id="goToSimpleSearch">
                                 <i class="fa fa-angle-right"></i> Proste wyszukiwanie </span>
-                        </form>-->
+                        </form>
 
                     </div>
 
@@ -136,55 +136,43 @@
             <hr>
             <div class="container">
                 <div class="container text-left">
-                    <br>
-                    <br>
-                    <h3> Najwyżej oceniane: </h3>
-                    <br>
-                    <br>
 
+                    <br> <h3> Polecane: </h3> <br>
 
                     <%if (booksArr !== undefined && booksArr !== null) { %>
                         <div class="books_container">
 
                             <div class="card-deck-wrapper">
                                 <div class="card-deck text-center">
+
                                     <% booksArr.forEach( (book) => { %>
 
-                                        <div class="card">
+                                        <div class="card ">
                                             <br>
-                                            <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.image %>" alt="<%= book.title + " " + ' image' %>">
+                                            <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.image %>" alt="<%= book.book + ' image' %>">
                                             <div class="card-body d-flex flex-column">
-                                                <p class="card-text">
-                                                    <strong>
-                                                        <i>
-                                                            <%= book.title %>
-                                                        </i>
-                                                    </strong>
+                                                <p class="card-text text-center">
+                                                    <strong> <i> <%= book.book %> </i> </strong>
                                                     <br>
-                                                    <a href="/authors/<%= book.idAuthor %>/<%= book.publisher %>">                                                             <%= book.publisher %>                                                         </a>
+                                                    <a href="/authors/<%= book.author.idAuthor %>/<%= book.author.name + " " + book.author.surname  %>">
+                                                        <%= book.author.name + " " + book.author.surname %>
+                                                    </a>
                                                 </p>
                                                 <a href="<%= '/book_profile/'+ book.idBook %>" class="btn btn-info btn-block mt-auto"> Więcej </a>
                                             </div>
                                         </div>
-
-                                        <% }) %>
+        
+                                    <% }) %>
                                 </div>
                             </div>
-
                         </div>
-
-                        <% } %>
+                    <% } %>
                 </div>
-
             </div>
-            <br>
-            <br>
-            <br>
-            <br>
 
         </main>
 
-        <%- include('footer.ejs') %>
+    <%- include('footer.ejs') %>
 </body>
 
 </html>

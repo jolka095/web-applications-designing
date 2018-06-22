@@ -3,56 +3,8 @@ var router = express.Router();
 const auth = require('../authentication/middleware');
 const Sequelize = require('sequelize');
 const db = require('../db');
+const helper = require('../public/js/helper');
 
-const getAverageMarkForBook = (marksArray) => {
-    let sum = 0;
-    let avg = 0;
-
-
-    if (marksArray == null || marksArray == undefined || marksArray == null || marksArray.length < 1) {
-        console.log("THIS BOOK DOES NOT HAVE ANY MARKS YET")
-    } else {
-        for (let i = 0; i < marksArray.length; i++) {
-            sum += marksArray[i].mark
-        }
-        avg = sum / marksArray.length
-    }
-    return avg.toFixed(2)
-}
-
-const getUserMarkForBook = (marksArray, userId) => {
-
-    let mark = null
-
-    if (userId == null || userId == undefined || marksArray == null) {
-        console.log("This user didn't mark this book or this book has no marks")
-    } else {
-        for (let i = 0; i < marksArray.length; i++) {
-            if (marksArray[i].idUser == userId) {
-                mark = marksArray[i].mark
-            }
-        }
-    }
-
-    return mark
-}
-
-const getBookStatusForUser = (statusesArr, userId) => {
-
-    let status = null
-
-    if (userId == null || userId == undefined || statusesArr.length < 1) {
-        console.log("This user didn't set status of this book or this book has no statuses")
-    } else {
-        for (let i = 0; i < statusesArr.length; i++) {
-            if (statusesArr[i].idUser == userId) {
-                status = statusesArr[i].stat
-            }
-        }
-    }
-
-    return status
-}
 
 // empty profile
 router.get('/', (req, res, next) => {
@@ -80,18 +32,16 @@ router.get('/:book_id', (req, res, next) => {
     })
         .then(result => {
 
-            if (result === null || result === undefined || result.length === 0) {
-                res.send("Nie znaleziono takiej ksiażki w bazie");
-            } else {
+            if (typeof result !== 'undefined' && result !== null) {
 
                 // helper object representing single book
                 const bookObject = {
                     details: result, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
                     author: result.author,
                     marksArr: result.marks ? result.marks : null, // mabye to remove
-                    avgMark: getAverageMarkForBook(result.marks),
-                    userMark: getUserMarkForBook(result.marks, idUser),
-                    status: (result.statuses.length > 0) ? getBookStatusForUser(result.statuses, idUser) : null,
+                    avgMark: helper.getAverageMarkForBook(result.marks),
+                    userMark: helper.getUserMarkForBook(result.marks, idUser),
+                    status: (result.statuses.length > 0) ? helper.getBookStatusForUser(result.statuses, idUser) : null,
                     volNumberInSeries: (result.bookseries.length > 0) ? result.bookseries[0].booksNumber : null,
                     series: (result.bookseries.length > 0) ? result.bookseries[0].series : null
                 }
@@ -99,11 +49,17 @@ router.get('/:book_id', (req, res, next) => {
                 console.log(JSON.stringify(bookObject, null, 2));
                 // console.log(JSON.stringify(result, null, 2));
                 res.render('book_profile', { book: bookObject, user: req.user ? req.user : null })
+
+                // }
+
+            } else {
+                res.send("Nie znaleziono takiej ksiażki w bazie");
             }
+
         })
         .catch(error => {
-            res.status(400).send(error);
             console.log(error);
+            res.status(400).send(error);
         });
 
 });

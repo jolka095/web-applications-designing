@@ -1,50 +1,58 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../db');
+const helper = require('../public/js/helper');
 
 router.get('/:series_id/:series_name', function (req, res, next) {
 
-  const queryStatement = `SELECT * FROM book_info WHERE series_id = ${req.params.series_id} ORDER BY vol_in_series; `;
+  const idUser = req.user ? req.user.idUser : null
 
-  db.query(queryStatement, (error, result) => {
-
-    if (result === null || result === undefined || result.length === 0) {
-
-      res.send("Nie znaleziono książek z takiej serii w bazie")
-
-    } else {
-      if (req.user) {
-        const queryStatement3 = `SELECT * FROM users natural join book_status natural join books natural join book_info WHERE idusers = "${req.user[0].idusers}" AND series_id = ${req.params.series_id} ORDER BY vol_in_series;; `;            
-        db.query(queryStatement3, (error, result3) => { 
-
-          if (result3 === null || result3 === undefined || result3.length === 0) {
-              // console.log(JSON.stringify(result2[0], null, 2));
-              const message = "Nie znaleziono żadnych książek w biblioteczce";
-              // res.render('resource_not_found', { message: message })
-              res.render('series', { booksArr: result, series: req.params.series_name, user: req.user, libraryArr:  0, not_libraryArr: 100}) //  0 gdy książek nie ma w biblioteczce
-
-          } else{
-              const queryStatement4 = `SELECT * FROM book_info WHERE book_info.book_id NOT IN (SELECT idbooks FROM book_status where idusers = ${req.user[0].idusers}) AND series_id = ${req.params.series_id}) ORDER BY vol_in_series; `;           
-              db.query(queryStatement4, (error, result4) => { 
-
-                  if (result4 === null || result4 === undefined || result4.length === 0) {
-                      // console.log(JSON.stringify(result2[0], null, 2));
-                      const message = "Nie znaleziono żadnych książek w biblioteczce";
-                      // res.render('resource_not_found', { message: message })
-                      res.render('series', { booksArr: result, series: req.params.series_name, user: req.user, libraryArr: result3, not_libraryArr: 0}) //  0 gdy książek nie ma w biblioteczce
-
-                  } 
-                  else{
-                    res.render('series', { booksArr: result, series: req.params.series_name, user: req.user, libraryArr: result3, not_libraryArr: result4 })
-                  }
-              })
-            }
-        })
-      }else {
-      res.render('series', { booksArr: result, series: req.params.series_name, user: req.user })
+  db.book.findAll({
+    include: [
+      db.author,
+      db.mark,
+      db.statuses,
+      {
+        model: db.bookSeries,
+        include: [db.series],
+        where: {
+          idSeries: req.params.series_id,
+        }
       }
-    }
+    ]
   })
+    .then(result => {
+
+      if (typeof result !== 'undefined' && result !== null) {
+
+        const booksContainer = []
+
+        result.forEach(book => {
+
+          booksContainer.push({
+            details: book, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
+            author: book.author,
+            marksArr: book.marks ? book.marks : null, // mabye to remove
+            avgMark: helper.getAverageMarkForBook(result.marks),
+            userMark: helper.getUserMarkForBook(result.marks, idUser),
+            status: (result.statuses) ? helper.getBookStatusForUser(result.statuses, idUser) : null,
+            volNumberInSeries: (book.bookseries.length > 0) ? book.bookseries[0].booksNumber : null,
+            series: (book.bookseries.length > 0) ? book.bookseries[0].series : null
+          })
+
+        });
+        console.log(JSON.stringify(booksContainer, null, 2));
+
+        res.render('series', { booksArr: booksContainer, series: req.params.series_name, user: req.user })
+      } else {
+        res.send("Nie znaleziono ksiażek w tej serii w bazie");
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(400).send(error);
+    })
+
 });
 
 module.exports = router;
