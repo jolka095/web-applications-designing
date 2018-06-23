@@ -145,6 +145,9 @@ router.post('/find', (req, res) => {
                     if (result.length > 0) {
                         console.log(JSON.stringify(result, null, 2));
                         res.render(`results`, { booksArr: result, what: req.body.find_item, user: req.user })
+                    } else {
+                        console.log("\nBrak wyników...");
+                        res.redirect(`/no_results/${req.body.find_item}`);
                     }
                 } else {
                     console.log("\nBrak wyników...");
