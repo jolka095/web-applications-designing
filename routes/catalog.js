@@ -10,39 +10,42 @@ router.get('/:book_id', function (req, res, next) {
 });
 
 router.get('/', function (req, res, next) {
-/*
-    db.book.findAll({
-        include: [{
-            model: db.author
-    }]
-    })
-    .then(result=>{
-        const bookObject = {
-            details: result[0], // there are also marks, statuses, series ect. but here they are 'harder' to get and display
-            author: result[0].author
-        };
-        console.log(JSON.stringify("I'm result!" + bookObject.details.book, null, 2));
-        console.log(JSON.stringify("I'm author!" + bookObject.author.name, null, 2));
-    })
-*/
+
+var cat = [];
+    db.book.aggregate('category', 'DISTINCT', { plain: false })
+        .map(function(row){ return row.DISTINCT })
+        .then(function(result2){
+            if (result2 === null || result2 === undefined) {
+                res.send("Nie znaleziono kategorii w bazie")
+            }
+
+            result2.forEach(ctg=>{
+                cat.push(ctg);
+            });
+            console.log(cat);
+        })
+        .catch(error2 => {
+            console.log(error2);
+            res.status(400).send(error2);
+        });
 
     const idUser = req.user ? req.user.idUser : null;
     db.book.findAll({
-        include: [{
-            model: db.author,
-            required: true
-        }]
+        include: [
+            db.author,
+            db.mark,
+            db.statuses,
+            {
+                model: db.bookSeries,
+                include: [db.series]
+            }
+        ]
     })
         .then(result => {
 
             if (result === null || result === undefined) {
                 res.send("Nie znaleziono książek w bazie");
             } else {
-                /*/ helper object representing single book
-                const bookObject = {
-                    details: result[], // there are also marks, statuses, series ect. but here they are 'harder' to get and display
-                    author: result[].author
-                };     */
 
                 const booksContainer = [];
 
@@ -51,55 +54,53 @@ router.get('/', function (req, res, next) {
                     booksContainer.push({
                         details: book, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
                         author: book.author,
-                        marksArr: book.mark ? book.mark : null, // mabye to remove
-                        avgMark: helper.getAverageMarkForBook(result.mark),
-                        userMark: helper.getUserMarkForBook(result.mark, idUser),
-                        status: (result.statuses) ? helper.getBookStatusForUser(result.statuses, idUser) : null,
+                       /* marksArr: book.mark ? book.mark : null, // mabye to remove
+                        avgMark: helper.getAverageMarkForBook(book.mark),
+                        userMark: helper.getUserMarkForBook(book.mark, idUser),
+                        status: (book.statuses) ? helper.getBookStatusForUser(book.statuses, idUser) : null,
                         volNumberInSeries: book.bookSeries ? book.bookSeries[0].booksNumber : null,
-                        series: book.bookSeries ? book.bookSeries[0].series : null
+                        series: book.bookSeries ? book.bookSeries[0].series : null*/
                     })
 
                 });
-                console.log(JSON.stringify(booksContainer, null, 2));
+                //console.log(JSON.stringify(booksContainer, null, 2));
 
-                db.book.aggregate('category', 'DISTINCT', { plain: false })
-                    .then(result2=> {
-                        if (result2 === null || result2 === undefined) {
-                            res.send("Nie znaleziono kategorii w bazie")
-                        }
-                        if (req.user) {
-                           /* db.user.findAll({
-                                include: [{model: db.statuses, include: [db.book]}],
+                      /*  if (req.user) {
+                            db.user.findOne({
+                                //include: [{model: db.statuses, include: [db.book]}],
                                 where: {idUser: req.user.idUser}
                             })
                                 .then(result3 => {
-                                    if (result3 === null || result3 === undefined) {        */
+                                    if (result3 === null || result3 === undefined) {
                                         // console.log(JSON.stringify(result2[0], null, 2));
                                         const message = "Nie znaleziono żadnych książek w bibliotece";
 
                                         console.log(JSON.stringify("I'm Object!" + booksContainer, null, 2));
-
+*/
                                         res.render('catalog', {
                                             booksArr: booksContainer,
-                                            catArr: result2,
+                                            catArr: cat,
                                             user: req.user,
                                             libraryArr: 0,
                                             not_librarayArr: 0
                                         }) //  0 gdy książek nie ma w biblioteczce
 /*
+                                    }  else {
+                                        res.render('catalog', {
+                                            booksArr: result,
+                                            catArr: cat,
+                                            user: req.user,
+                                            libraryArr: result3,
+                                            //not_librarayArr: result4
+                                        })
                                     }
                                 })
                                 .catch(error3 => {
                                     console.log(error3);
                                     res.status(400).send(error3);
                                 });
-*/
-                        }
-                    })
-                    .catch(error2 => {
-                        console.log(error2);
-                        res.status(400).send(error2);
-                    });
+                        }*/
+
             }
 
         })
