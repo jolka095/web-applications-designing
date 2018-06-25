@@ -10,6 +10,14 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             allowNull: false
         },
+        idAuthor: {
+            type: Sequelize.INTEGER(10).UNSIGNED,
+            allowNull: false,
+            references: {
+                model: Author,
+                key: 'authorId',
+            }
+        },
         addDate: {
             type: Sequelize.DATE,
             allowNull: true
