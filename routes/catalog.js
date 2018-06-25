@@ -22,7 +22,7 @@ var cat = [];
             result2.forEach(ctg=>{
                 cat.push(ctg);
             });
-            console.log(cat);
+           // console.log(cat);
         })
         .catch(error2 => {
             console.log(error2);
@@ -65,41 +65,44 @@ var cat = [];
                 });
                 //console.log(JSON.stringify(booksContainer, null, 2));
 
-                      /*  if (req.user) {
-                            db.user.findOne({
-                                //include: [{model: db.statuses, include: [db.book]}],
-                                where: {idUser: req.user.idUser}
-                            })
-                                .then(result3 => {
-                                    if (result3 === null || result3 === undefined) {
-                                        // console.log(JSON.stringify(result2[0], null, 2));
-                                        const message = "Nie znaleziono żadnych książek w bibliotece";
-
-                                        console.log(JSON.stringify("I'm Object!" + booksContainer, null, 2));
+            //    if (req.user) {
+              /*      db.book.findAll({
+                        include: [{model: db.statuses, where:{idUser: req.user.idUser}}]
+                    })
+                        .then(result3 => {
+                            if (result3 === null || result3 === undefined) {
+                                // console.log(JSON.stringify(result2[0], null, 2));
+                                const message = "Nie znaleziono żadnych książek w bibliotece";
 */
-                                        res.render('catalog', {
-                                            booksArr: booksContainer,
-                                            catArr: cat,
-                                            user: req.user,
-                                            libraryArr: 0,
-                                            not_librarayArr: 0
-                                        }) //  0 gdy książek nie ma w biblioteczce
+                                //console.log(JSON.stringify("I'm Object!" + booksContainer, null, 2));
+
+                                res.render('catalog', {
+                                    booksArr: booksContainer,
+                                    catArr: cat,
+                                    user: req.user,
+                                    libraryArr: 0,
+                                    not_librarayArr: 0
+                                }) //  0 gdy książek nie ma w biblioteczce
 /*
-                                    }  else {
+                            }  else {
+                                db.book.findAll({where:{[Op.notIn]:db.book.findById({where:})}})
+                                    .then(result4=>{
                                         res.render('catalog', {
                                             booksArr: result,
                                             catArr: cat,
                                             user: req.user,
                                             libraryArr: result3,
-                                            //not_librarayArr: result4
+                                            not_librarayArr: result4
                                         })
-                                    }
-                                })
-                                .catch(error3 => {
-                                    console.log(error3);
-                                    res.status(400).send(error3);
-                                });
-                        }*/
+                                    })
+
+                            }
+                        })
+                        .catch(error3 => {
+                            console.log(error3);
+                            res.status(400).send(error3);
+                        });*/
+             //   }
 
             }
 
