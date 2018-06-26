@@ -4,28 +4,44 @@ const db = require('../db');
 
 
 router.get('/', function (req, res, next) {
+    db.book.findAll({
+        limit: 4,
 
-  const queryStatement = `SELECT * FROM book_info LIMIT 4; `;
-  const queryStatement2 = `SELECT * FROM categories; `;
+        include: [
+            db.author,
+        ]
+    })
+        .then(result => {
+            const booksContainer = [];
+            const cat = [];
 
-  db.query(queryStatement, (error, result) => {
+            result.forEach(book => {
 
-    if (result === null || result === undefined || result.length === 0) {
+                booksContainer.push({
+                    details: book, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
+                    author: book.author
+                })
+            });
 
-      res.send("Nie znaleziono książek w bazie")
+            db.book.aggregate('category', 'DISTINCT', { plain: false })
+                .map(function(row){ return row.DISTINCT })
+                .then(function(result){
 
-    } else {
+                    result.forEach(ctg=>{
+                        cat.push(ctg);
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                    res.send("Nie znaleziono kategorii w bazie")
+                });
 
-      db.query(queryStatement2, (error, result2) => {
-        if (result2 === null || result2 === undefined || result2.length === 0) {
-          res.send("Nie znaleziono kategorii w bazie")
-        } else {
-          // console.log(JSON.stringify(result, null, 2))
-          res.render('books', { booksArr: result, catArr: result2, user: req.user })
-        }
-      })
-    }
-  })
-})
+            res.render('books', { booksArr: booksContainer, catArr: cat, user: req.user })
+        })
+        .catch(error => {
+            console.log(error);
+            res.send("Nie znaleziono książek w bazie")
+        });
+});
 
 module.exports = router;

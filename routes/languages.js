@@ -4,22 +4,34 @@ const db = require('../db');
 
 
 router.get('/:language_name', function (req, res, next) {
+    var cat = [];
 
-  const queryStatement = `SELECT * FROM book_info WHERE language = "${req.params.language_name}"; `;
+    db.book.findAll({
+        include: [
+            db.author,
+        ],
+        where: {
+          lang: req.params.language_name
+        }
+    })
+      .then(result=>{
+          const booksContainer = [];
 
-  db.query(queryStatement, (error, result) => {
+          result.forEach(book => {
 
-    if (result === null || result === undefined || result.length === 0) {
+              booksContainer.push({
+                  details: book, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
+                  author: book.author
+              })
 
-      res.send("Nie znaleziono książek w takim języku w bazie")
-      // res.render('resource_not_found', { message: message })
-    }
-    else {
-      res.render('languages', { booksArr: result, lan: req.params.language_name, user: req.user })
-    }
-  })
+          });
+
+          res.render('languages', { booksArr: booksContainer, lan: req.params.language_name, user: req.user })
+      })
+      .catch(error => {
+          console.log(error);
+          res.send("Nie znaleziono książek w takim języku w bazie")
+      });
 });
-
-
 
 module.exports = router;
