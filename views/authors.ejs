@@ -26,13 +26,9 @@
 
                                 <div class="card ">
                                     <br>
-                                    <%if (user) { %>
-                                        <a href="/book_read/<%= book.details.idBook %>" title="Czytaj >>">
-                                            <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.book + ' image' %>">
-                                        </a> %>
-                                    <% } else { %>
+                                    <a href="/book_read/<%= book.details.idBook %>" title="Czytaj >>">
                                         <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.book + ' image' %>">
-                                    <% } %>
+                                    </a> %>
 
                                     <div class="card-body d-flex flex-column">
                                         <p class="card-text text-center">

@@ -34,23 +34,23 @@ router.get('/:book_id', (req, res, next) => {
             if (typeof result !== 'undefined' && result !== null) {
 
                 // helper object representing single book
-               /* const bookObject = {
-                    details: result, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
+                const bookObject = {
+                    details: result,
                     author: result.author,
-                    marksArr: result.mark ? result.mark : null, // mabye to remove
-                    avgMark: helper.getAverageMarkForBook(result.mark),
-                    userMark: helper.getUserMarkForBook(result.mark, idUser),
-                    status: (result.statuses) ? helper.getBookStatusForUser(result.statuses, idUser) : null,
-                    volNumberInSeries: result.bookSeries.booksNumber,
-                    series: result.bookSeries.series,
-                };
-*/
-                //console.log(JSON.stringify(bookObject, null, 2));
-                console.log(JSON.stringify(result, null, 2));
-                //res.render('book_profile', { book: bookObject, user: req.user ? req.user : null })
+                    marksArr: ((typeof result.marks !== 'undefined' && result.marks !== null) ? result.marks : null),
+                    avgMark: helper.getAverageMarkForBook(result.marks),
+                    userMark: helper.getUserMarkForBook(result.marks, idUser),
+                    status: ((typeof result.statuses !== 'undefined' && result.statuses !== null) ? helper.getBookStatusForUser(result.statuses, idUser) : null),
+                    volNumberInSeries: ((typeof result.bookseries !== 'undefined' && result.bookseries !== null) ? ((result.bookseries.length > 0) ? result.bookseries[0].booksNumber : null) : null),
+                    // volNumberInSeries: result.bookSeries.booksNumber,
 
-                // }
+                    series: ((typeof result.bookseries !== 'undefined' && result.bookseries !== null) ? ((result.bookseries.length > 0) ? result.bookseries[0].series : null) : null)
+                    // series: result.bookSeries.series,
+                }
 
+                console.log(JSON.stringify(bookObject, null, 2));
+                // console.log(JSON.stringify(result, null, 2));
+                res.render('book_profile', { book: bookObject, user: idUser })
             } else {
                 res.send("Nie znaleziono takiej ksiażki w bazie");
             }
