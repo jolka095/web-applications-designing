@@ -151,8 +151,8 @@
                                                     <p class="card-text">
                                                         <strong> <i> <%= book_in_library.details.book %> </i> </strong>
                                                         <br>
-                                                        <a href="/authors/<%= book.author.idAuthor  %>/<%= book.author.name + " " + book.author.surname %>">
-                                                            <%= book.author.name + " " + book.author.surname  %>
+                                                        <a href="/authors/<%= book_in_library.author.idAuthor  %>/<%= book_in_library.author.name + " " + book_in_library.author.surname %>">
+                                                            <%= book_in_library.author.name + " " + book_in_library.author.surname  %>
                                                         </a>
                                                     <a href="<%= '/book_profile/'+ book_in_library.details.idBook %>" class="btn btn-info btn-block mt-auto"> Więcej </a>
                                                 </div>
@@ -170,11 +170,11 @@
     
                 <div id="out" role="tabpanel" class="tab-pane fade">
                         <br>
-                        <%if (not_librarayArr !== undefined && not_librarayArr !== null && not_librarayArr !== 0) { %>
+                        <%if (not_libraryArr !== undefined && not_libraryArr !== null && not_libraryArr !== 0) { %>
                             <div class="books_container">
                                 <div class="card-deck-wrapper">
                                     <div class="card-deck">
-                                      <% not_librarayArr.forEach( (book) => { %>
+                                      <% not_libraryArr.forEach( (book) => { %>
                                                                                               
                                             <div class="card text-center">
                                                 <br>

@@ -48,7 +48,7 @@
                                     <% booksArr.forEach( (book) => { %>
                                         <%if (book.status.stat == 'reading' ) {
                                             in_reading = in_reading + 1;
-                                            console.log(in_reading);%>
+                                            %>
 
                                             <div class="card text-center">
                                                 <br>
@@ -88,9 +88,9 @@
                                 <div class="card-deck">
                                     <% 
                                     booksArr.forEach( (book) => { %>
-                                        <%if (book.status.stat == "to read" ) {
+                                        <%if (book.status.stat == 'to_read' ) {
                                             to_read = to_read + 1; 
-                                            console.log(to_read);%>
+                                            %>
 
                                             <div class="card text-center">
                                                 <br>
@@ -130,7 +130,7 @@
                                     <% booksArr.forEach( (book) => { %>
                                         <%if (book.status.stat == 'done' ) {
                                             read = read + 1;
-                                            console.log(read);%>
+                                            %>
                                             <div class="card text-center">
                                                 <br>
                                                 <a href="book_read.ejs" title="Czytaj >>">
