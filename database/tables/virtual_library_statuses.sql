@@ -33,7 +33,7 @@ CREATE TABLE `statuses` (
   `lastUsed` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`idStat`),
   UNIQUE KEY `idstats_UNIQUE` (`idStat`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `statuses` (
 
 LOCK TABLES `statuses` WRITE;
 /*!40000 ALTER TABLE `statuses` DISABLE KEYS */;
-INSERT INTO `statuses` VALUES (1,1,3,'reading',NULL,NULL),(2,2,3,'to_read',NULL,NULL),(3,3,3,'done',NULL,NULL),(4,2,2,'done',NULL,NULL),(5,20,1,'done',NULL,NULL),(6,21,1,'done',NULL,NULL),(7,22,1,'done',NULL,NULL);
+INSERT INTO `statuses` VALUES (1,1,3,'reading',NULL,NULL),(2,2,3,'to_read',NULL,NULL),(3,3,3,'done',NULL,NULL),(4,2,2,'done',NULL,NULL),(5,20,1,'done',NULL,NULL),(6,21,1,'done',NULL,NULL),(7,22,1,'done',NULL,NULL),(8,23,4,'reading',NULL,NULL);
 /*!40000 ALTER TABLE `statuses` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-25 22:07:10
+-- Dump completed on 2018-06-26 19:59:30
