@@ -52,14 +52,18 @@
 
                                             <div class="card text-center">
                                                 <br>
-                                                <a href="book_read.ejs" title="Czytaj >>">
-                                                    <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.title + " " + ' image' %>">
-                                                </a>
+                                                <%if (user) { %> <a href="/book_read/<%= book.details.idBook %>"  title="Czytaj >>">
+                                                    <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.book + " " + ' image' %>">
+                                                </a> %> <% } else { %>
+                                                <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.book + " " + ' image' %>">
+                                                <% } %>
                                                 <div class="card-body d-flex flex-column">
                                                     <p class="card-text">
-                                                        <strong> <i> <%= book.details.title %> </i> </strong>
+                                                        <strong> <i> <%= book.details.book %> </i> </strong>
                                                         <br>
-                                                    <a href="/authors/<%= book.author.idAuthor %>/<%= book.author.author %>">       <%= book.author.author %>    </a>
+                                                        <a href="/authors/<%= book.author.idAuthor  %>/<%= book.author.name + " " + book.author.surname %>">
+                                                            <%= book.author.name + " " + book.author.surname  %>
+                                                        </a>
                                                     </p>
                                                     <a href="<%= '/book_profile/'+ book.details.idBook %>" class="btn btn-info btn-block mt-auto"> Więcej </a>
                                                 </div>
@@ -92,20 +96,24 @@
                                             to_read = to_read + 1; 
                                             %>
 
-                                            <div class="card text-center">
-                                                <br>
-                                                <a href="book_read.ejs" title="Czytaj >>">
-                                                    <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.title + " " + ' image' %>">
-                                                </a>
-                                                <div class="card-body d-flex flex-column">
-                                                    <p class="card-text">
-                                                        <strong> <i> <%= book.details.title %> </i> </strong>
-                                                        <br>
-                                                        <a href="/authors/<%= book.author.idAuthor %>/<%= book.author.author %>">       <%= book.author.author %>    </a>
-                                                    </p>
-                                                    <a href="<%= '/book_profile/'+ book.details.idBook %>" class="btn btn-info btn-block mt-auto"> Więcej </a>
-                                                </div>
+                                        <div class="card text-center">
+                                            <br>
+                                            <%if (user) { %> <a href="/book_read/<%= book.details.idBook %>"  title="Czytaj >>">
+                                                <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.book + " " + ' image' %>">
+                                            </a> %> <% } else { %>
+                                            <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.book + " " + ' image' %>">
+                                            <% } %>
+                                            <div class="card-body d-flex flex-column">
+                                                <p class="card-text">
+                                                    <strong> <i> <%= book.details.book %> </i> </strong>
+                                                    <br>
+                                                    <a href="/authors/<%= book.author.idAuthor  %>/<%= book.author.name + " " + book.author.surname %>">
+                                                        <%= book.author.name + " " + book.author.surname  %>
+                                                    </a>
+                                                </p>
+                                                <a href="<%= '/book_profile/'+ book.details.idBook %>" class="btn btn-info btn-block mt-auto"> Więcej </a>
                                             </div>
+                                        </div>
                                       
                                         <% } %> 
                                     <% }) 
@@ -133,14 +141,18 @@
                                             %>
                                             <div class="card text-center">
                                                 <br>
-                                                <a href="book_read.ejs" title="Czytaj >>">
-                                                    <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.title + " " + ' image' %>">
-                                                </a>
+                                                <%if (user) { %> <a href="/book_read/<%= book.details.idBook %>"  title="Czytaj >>">
+                                                    <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.book + " " + ' image' %>">
+                                                </a> %> <% } else { %>
+                                                <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="<%= book.details.book + " " + ' image' %>">
+                                                <% } %>
                                                 <div class="card-body d-flex flex-column">
                                                     <p class="card-text">
-                                                        <strong> <i> <%= book.details.title %> </i> </strong>
+                                                        <strong> <i> <%= book.details.book %> </i> </strong>
                                                         <br>
-                                                        <a href="/authors/<%= book.author.idAuthor %>/<%= book.author.author %>">       <%= book.author.author %>    </a>
+                                                        <a href="/authors/<%= book.author.idAuthor  %>/<%= book.author.name + " " + book.author.surname %>">
+                                                            <%= book.author.name + " " + book.author.surname  %>
+                                                        </a>
                                                     </p>
                                                     <a href="<%= '/book_profile/'+ book.details.idBook %>" class="btn btn-info btn-block mt-auto"> Więcej </a>
                                                 </div>
