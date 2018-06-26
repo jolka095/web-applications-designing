@@ -29,14 +29,14 @@ router.get('/:category_name', function (req, res, next) {
         result.forEach(book => {
 
           booksContainer.push({
-            details: book, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
-            author: book.author,
-            marksArr: book.marks ? book.marks : null, // mabye to remove
-            avgMark: helper.getAverageMarkForBook(result.marks),
-            userMark: helper.getUserMarkForBook(result.marks, idUser),
-            status: (result.statuses) ? helper.getBookStatusForUser(result.statuses, idUser) : null,
-            volNumberInSeries: (book.bookseries.length > 0) ? book.bookseries[0].booksNumber : null,
-            series: (book.bookseries.length > 0) ? book.bookseries[0].series : null
+              details: book, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
+              author: book.author,
+              marksArr: book.marks ? book.marks : null, // mabye to remove
+              avgMark: helper.getAverageMarkForBook(book.marks),
+              userMark: helper.getUserMarkForBook(book.marks, idUser),
+              status: (book.statuses) ? helper.getBookStatusForUser(book.statuses, idUser) : null,
+              volNumberInSeries: (book.bookseries.length > 0) ? book.bookseries[0].booksNumber : null,
+              series: (book.bookseries.length > 0) ? book.bookseries[0].series : null
           })
 
         });
