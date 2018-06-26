@@ -145,9 +145,6 @@ router.post('/find', (req, res) => {
                     if (result.length > 0) {
                         console.log(JSON.stringify(result, null, 2));
                         res.render(`results`, { booksArr: result, what: req.body.find_item, user: req.user })
-                    } else {
-                        console.log("\nBrak wyników...");
-                        res.redirect(`/no_results/${req.body.find_item}`);
                     }
                 } else {
                     console.log("\nBrak wyników...");
@@ -170,19 +167,13 @@ router.get('/', function (req, res, next) {
 
         include: [
             db.author,
-            db.mark,
-            db.statuses,
-            {
-                model: db.bookSeries,
-                include: [db.series]
-            }
         ]
     })
         .then(result => {
             if (result === null || result === undefined || result.length === 0) {
                 res.send("Nie znaleziono żadnych kategorii w bazie");
             } else {
-                console.log(JSON.stringify(result, null, 2));
+                //console.log(JSON.stringify(result, null, 2));
                 res.render('index', { booksArr: result, user: req.user })
             }
         })
