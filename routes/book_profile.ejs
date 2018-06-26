@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('header.ejs') %>
+</head>
+
+<body>
+<%if (user) { %> <%- include('navbar.ejs') %> <% } else { %> <%- include('navbar1.ejs') %> <% } %>
+
+<%if (book !== undefined && book !== null) { %>
+<div class="container book_container">
+    <div class="row">
+        <div class="col-md-4 ">
+
+            <!-- click to read -->
+            <% if (user) { %>
+            <a href="/book_read/<%= book.details.idBook %>" title="Czytaj >>">
+                <img class="img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="book cover">
+            </a>
+            <% } else { %>
+            <img class="img-fluid mx-auto d-block" src="/<%= book.details.image %>" alt="book cover">
+            <% } %>
+            <!-- click to read END -->
+
+
+
+            <!-- book status updates -->
+            <% if (user !== undefined && user !== null) { %>
+
+            <!-- if there are any statuses -->
+            <%if (book.details.statuses.length > 0) { %>
+
+            <!-- if there's no status for user -->
+            <%if ( book.status == null ) { %>
+            <div class="dropdown show text-center">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Dodaj do biblioteczki </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <form action="<%= '/book_profile/read/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane</button>
+                    </form>
+                    <form action="<%= '/book_profile/add_to_read/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-plus-circle" type="submit" id="chce_przeczytac"> Chcę przeczytać</button>
+                    </form>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- if user already read book -->
+            <%if (book.status == "done") { %>
+            <h6 class="text-center"> Status: <br> <strong> Przeczytana </strong> </h6>
+            <div class="dropdown show text-center">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <!-- <form action = "<%= '/book_profile/read/'+ book.details.idBook %>"  method = "POST">
+                                            <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane </button>
+                                            </form> -->
+                    <form action="<%= '/book_profile/read/remove/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
+                    </form>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- if user already read book -->
+            <%if (book.status == "reading") { %>
+            <h3> Teraz czytam </h3>
+            <!-- <h5> I TO SIE MA CHYBA AUTOMATYCZNIE DODAWAĆ?</h5> -->
+            <% } %>
+
+
+            <!-- if user wants to read a book -->
+            <%if (book.status == "to_read") { %>
+            <h6 class="text-center"> Status: <br> <strong> Chcę przeczytać </strong> </h6>
+            <div class="dropdown show text-center">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień status </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <form action="<%= '/book_profile/read/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane </button>
+                    </form>
+                    <form action="<%= '/book_profile/add_to_read/remove/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
+                    </form>
+                </div>
+            </div>
+            <% } %>
+
+
+            <% } %> <!-- check book status END -->
+            <% } %> <!-- check user END -->
+
+            <!-- book status updates END -->
+
+
+        </div> <!-- col 4 end -->
+
+
+        <div id="book_info" class="col-md-8 text-left card ">
+
+
+            <div class="title"> <strong><i><%= book.details.book %></i></strong></div>
+
+
+            <div class="author">
+                <br>autorstwa
+                <a href="/authors/<%= book.author.idAuthor  %>/<%= book.author.name + " " + book.author.surname %>">
+                    <%= book.author.name + " " + book.author.surname  %>
+                </a>
+            </div>
+
+
+
+            <%if (book.series !== undefined && book.series !== null) { %>
+            <div class="series">
+                Seria:
+                <a href="/series/<%= book.series.idSeries %>/<%= book.series.series %>">
+                    <%= book.series.series %>
+                </a>
+
+                <%if (book.volNumberInSeries !== null) { %>
+                tom <%= book.volNumberInSeries %>
+                <% } %>
+                <br>
+                <br>
+            </div>
+            <% } %>
+
+
+
+            <div class="category"> Z kategorii:
+                <a href="/categories/<%= book.details.category %>">
+                    <%= book.details.category %>
+                </a>
+            </div>
+
+
+
+            <div class="language"> Dostępna w języku:
+                <a href="/languages/<%= book.details.lang %>">
+                    <%= book.details.lang %>
+                </a>
+                <br>
+                <br>
+            </div>
+
+
+            <div class="rating inline-block" id="ratingStars">
+                <%if (Math.round(book.avgMark) < 1) { %>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <% } else if (Math.round(book.avgMark) < 2 ) { %>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <% } else if (Math.round(book.avgMark) < 3 ) { %>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <% } else if (Math.round(book.avgMark) < 4 ) { %>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <% } else if (Math.round(book.avgMark) < 5 ) { %>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star-o"></i>
+                <% } else if (Math.round(book.avgMark) < 6 ) { %>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <i aria-hidden="true" class="fa fa-star"></i>
+                <% } %>
+
+                <strong> <%= book.avgMark %>/5 </strong>
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <%= book.marksArr.length %> ocen
+
+
+
+                <%if (user !== undefined && user !== null) { %>
+                <%if ( book.status !== null && book.status === "done") { %>
+
+                <%if (book.userMark === null) { %>
+                <br><br>
+                <form action="<%= '/book_profile/rate_book/'+ book.details.idBook + '/user/'+ user.idUser %>" method="POST" id="ratingForm">
+                    <label>Oceń książkę:</label>
+                    <select name="mark" id="ratingSelect" class="form-control" onchange='this.form.submit()' style="max-width: 150px;">
+                        <option selected disabled> Oceń książkę </option>
+                        <option value="0">Zła (0)</option>
+                        <option value="1">Słaba (1)</option>
+                        <option value="2">Może być (2)</option>
+                        <option value="3">Przeciętna(3)</option>
+                        <option value="4">Dobra(4)</option>
+                        <option value="5">Bardzo dobra(5)</option>
+                    </select>
+                    <noscript>
+                        <input type="submit" value="Submit">
+                    </noscript>
+                </form>
+
+                <% } else { %>
+
+                <br> Twoja ocena to: <%=  book.userMark %><br><br>
+                <form action="<%= '/book_profile/rate_book/'+ book.details.idBook + '/user/'+ user.idUser %>" method="POST" id="ratingForm">
+                    <select name="mark" id="ratingSelect" class="form-control" onchange='this.form.submit()' style="max-width: 150px;">
+                        <option selected disabled> Zmień ocenę: </option>
+                        <option value="0">Zła (0)</option>
+                        <option value="1">Słaba (1)</option>
+                        <option value="2">Może być (2)</option>
+                        <option value="3">Przeciętna(3)</option>
+                        <option value="4">Dobra(4)</option>
+                        <option value="5">Bardzo dobra(5)</option>
+                    </select>
+                    <noscript>
+                        <input type="submit" value="Submit">
+                    </noscript>
+                </form>
+
+                <% } %> <!-- check user mark END -->
+                <% } %> <!-- check status END -->
+                <% } %> <!-- check user END -->
+            </div>
+
+            <div class="synopsis text-justify">
+                <%= book.details.synopsis %>
+            </div>
+            <hr>
+            <div class="details">
+                <button class="btn btn-outline-info" type="button" data-toggle="collapse" data-target="#footwear" aria-expanded="false" aria-controls="footwear">
+                    <strong> Więcej szczegółów </strong>
+                </button>
+
+                <p class="text-justify collapse" id="footwear">
+                    Wydano <%= book.details.releaseDate %>
+                    przez <%= book.details.publisher %>.
+                    <br> Numer referncyjny: <%= book.details.ID_NUMBER %>.
+                    <br>Tytuł oryginalny: <%= book.details.originalTitle %>.
+                </p>
+
+            </div>
+        </div> <!-- col 8 end -->
+    </div> <!-- row end -->
+</div> <!-- end of book_container -->
+<% } %>
+
+<%- include('footer.ejs') %>
+</body>
+
+</html>
