@@ -28,58 +28,58 @@
             <!-- book status updates -->
             <% if (user !== undefined && user !== null) { %>
 
-                <!-- if there's no status for user -->
-                <%if ( book.status == null ) { %>
-                <div class="dropdown show text-center">
-                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Dodaj do biblioteczki </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <form action="<%= '/book_profile/read/'+ book.details.idBook %>" method="POST">
-                            <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane</button>
-                        </form>
-                        <form action="<%= '/book_profile/add_to_read/'+ book.details.idBook %>" method="POST">
-                            <button class="dropdown-item btn btn-secondary fa fa-plus-circle" type="submit" id="chce_przeczytac"> Chcę przeczytać</button>
-                        </form>
-                    </div>
+            <!-- if there's no status for user -->
+            <%if ( book.status == null ) { %>
+            <div class="dropdown show text-center">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Dodaj do biblioteczki </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <form action="<%= '/book_profile/read/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane</button>
+                    </form>
+                    <form action="<%= '/book_profile/add_to_read/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-plus-circle" type="submit" id="chce_przeczytac"> Chcę przeczytać</button>
+                    </form>
                 </div>
-                <% } %>
+            </div>
+            <% } %>
 
-                <!-- if user already read book -->
-                <%if (book.status == "done") { %>
-                <h6 class="text-center"> Status: <br> <strong> Przeczytana </strong> </h6>
-                <div class="dropdown show text-center">
-                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <!-- <form action = "<%= '/book_profile/read/'+ book.details.idBook %>"  method = "POST">
+            <!-- if user already read book -->
+            <%if (book.status == "done") { %>
+            <h6 class="text-center"> Status: <br> <strong> Przeczytana </strong> </h6>
+            <div class="dropdown show text-center">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <!-- <form action = "<%= '/book_profile/read/'+ book.details.idBook %>"  method = "POST">
                                                 <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane </button>
                                                 </form> -->
-                        <form action="<%= '/book_profile/read/remove/'+ book.details.idBook %>" method="POST">
-                            <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
-                        </form>
-                    </div>
+                    <form action="<%= '/book_profile/read/remove/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
+                    </form>
                 </div>
-                <% } %>
+            </div>
+            <% } %>
 
-                <!-- if user already read book -->
-                <%if (book.status == "reading") { %>
-                    <h6 class="text-center"> Status: <br> <strong> W trakcie czytania </strong> </h6>
-                <% } %>
+            <!-- if user already read book -->
+            <%if (book.status == "reading") { %>
+            <h6 class="text-center"> Status: <br> <strong> W trakcie czytania </strong> </h6>
+            <% } %>
 
 
-                <!-- if user wants to read a book -->
-                <%if (book.status == "to_read") { %>
-                <h6 class="text-center"> Status: <br> <strong> Chcę przeczytać </strong> </h6>
-                <div class="dropdown show text-center">
-                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień status </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <form action="<%= '/book_profile/read/'+ book.details.idBook %>" method="POST">
-                            <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane </button>
-                        </form>
-                        <form action="<%= '/book_profile/add_to_read/remove/'+ book.details.idBook %>" method="POST">
-                            <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
-                        </form>
-                    </div>
+            <!-- if user wants to read a book -->
+            <%if (book.status == "to_read") { %>
+            <h6 class="text-center"> Status: <br> <strong> Chcę przeczytać </strong> </h6>
+            <div class="dropdown show text-center">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" id="dropdownMenuButton"> Zmień status </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <form action="<%= '/book_profile/read/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-check-circle" type="submit" id="przeczytana"> Przeczytane </button>
+                    </form>
+                    <form action="<%= '/book_profile/add_to_read/remove/'+ book.details.idBook %>" method="POST">
+                        <button class="dropdown-item btn btn-secondary fa fa-close" type="submit"> Usuń z tej półki </button>
+                    </form>
                 </div>
-                <% } %>
+            </div>
+            <% } %>
 
             <% } %> <!-- check user END -->
 
