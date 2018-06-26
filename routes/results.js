@@ -4,6 +4,7 @@ const db = require('../db');
 
 
 router.get('/', function (req, res, next) {
+
     db.book.findAll({
         limit: 4,
 
@@ -12,31 +13,32 @@ router.get('/', function (req, res, next) {
         ]
     })
         .then(result => {
-            const booksContainer = [];
-            const cat = [];
+            // const booksContainer = [];
+            // const cat = [];
 
-            result.forEach(book => {
+            // result.forEach(book => {
 
-                booksContainer.push({
-                    details: book, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
-                    author: book.author
-                })
-            });
+            //     booksContainer.push({
+            //         details: book, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
+            //         author: book.author
+            //     })
+            // });
 
-            db.book.aggregate('category', 'DISTINCT', { plain: false })
-                .map(function(row){ return row.DISTINCT })
-                .then(function(result){
+            // db.book.aggregate('category', 'DISTINCT', { plain: false })
+            //     .map(function (row) { return row.DISTINCT })
+            //     .then(function (result) {
 
-                    result.forEach(ctg=>{
-                        cat.push(ctg);
-                    });
-                })
-                .catch(error => {
-                    console.log(error);
-                    res.send("Nie znaleziono kategorii w bazie")
-                });
+            //         result.forEach(ctg => {
+            //             cat.push(ctg);
+            //         });
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //         res.send("Nie znaleziono kategorii w bazie")
+            //     });
 
-            res.render('books', { booksArr: booksContainer, catArr: cat, user: req.user })
+            // res.render('books', { booksArr: booksContainer, catArr: cat, user: req.user })
+            res.render(`results`, { booksArr: result, what: null, user: req.user })
         })
         .catch(error => {
             console.log(error);
