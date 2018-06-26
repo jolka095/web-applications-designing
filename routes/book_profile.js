@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:book_id', (req, res, next) => {
-    const idUser = req.user ? req.user.idUser : undefined
+    const idUser = req.user ? req.user.idUser : undefined;
 
     db.book.findOne({
         where: {
@@ -34,20 +34,20 @@ router.get('/:book_id', (req, res, next) => {
             if (typeof result !== 'undefined' && result !== null) {
 
                 // helper object representing single book
-                const bookObject = {
+               /* const bookObject = {
                     details: result, // there are also marks, statuses, series ect. but here they are 'harder' to get and display
                     author: result.author,
                     marksArr: result.mark ? result.mark : null, // mabye to remove
                     avgMark: helper.getAverageMarkForBook(result.mark),
                     userMark: helper.getUserMarkForBook(result.mark, idUser),
                     status: (result.statuses) ? helper.getBookStatusForUser(result.statuses, idUser) : null,
-                    volNumberInSeries: (result.bookseries.length > 0) ? result.bookseries[0].booksNumber : null,
-                    series: (result.bookseries.length > 0) ? result.bookseries[0].series : null
+                    volNumberInSeries: result.bookSeries.booksNumber,
+                    series: result.bookSeries.series,
                 };
-
-                console.log(JSON.stringify(bookObject, null, 2));
-                // console.log(JSON.stringify(result, null, 2));
-                res.render('book_profile', { book: bookObject, user: req.user ? req.user : null })
+*/
+                //console.log(JSON.stringify(bookObject, null, 2));
+                console.log(JSON.stringify(result, null, 2));
+                //res.render('book_profile', { book: bookObject, user: req.user ? req.user : null })
 
                 // }
 
