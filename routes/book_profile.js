@@ -42,10 +42,7 @@ router.get('/:book_id', (req, res, next) => {
                     userMark: helper.getUserMarkForBook(result.marks, idUser),
                     status: ((typeof result.statuses !== 'undefined' && result.statuses !== null) ? helper.getBookStatusForUser(result.statuses, idUser) : null),
                     volNumberInSeries: ((typeof result.bookseries !== 'undefined' && result.bookseries !== null) ? ((result.bookseries.length > 0) ? result.bookseries[0].booksNumber : null) : null),
-                    // volNumberInSeries: result.bookSeries.booksNumber,
-
                     series: ((typeof result.bookseries !== 'undefined' && result.bookseries !== null) ? ((result.bookseries.length > 0) ? result.bookseries[0].series : null) : null)
-                    // series: result.bookSeries.series,
                 }
 
                 console.log(JSON.stringify(bookObject, null, 2));

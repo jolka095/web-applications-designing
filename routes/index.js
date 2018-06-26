@@ -27,6 +27,9 @@ router.post('/find', (req, res) => {
                 else if (search_for[i] == "author") {
                     sql_condition += ` ${req.body.search_condition[i]} \`authors\`.\`name\` LIKE "%${item[i]}%" OR \`authors\`.\`surname\` LIKE "%${item[i]}%" `;
                 }
+                else if (search_for[i] == "series") {
+                    sql_condition += ` ${req.body.search_condition[i]} \`series\` LIKE "%${item[i]}%" `;
+                }
                 else {
                     sql_condition += ` ${req.body.search_condition[i]} \`${search_for[i]}\` LIKE "%${item[i]}%" `;
                 }
@@ -39,6 +42,9 @@ router.post('/find', (req, res) => {
                 sql_condition += `\`book\` LIKE "%${item}%" `;
             } else if (search_for == "author") {
                 sql_condition += `  \`authors\`.\`name\` LIKE "%${item}%" OR \`authors\`.\`surname\` LIKE "%${item}%" `;
+            } 
+            else if (search_for == "series") {
+                sql_condition += `\`series\` LIKE "%${item}%" `;
             }
             else {
                 sql_condition = `\`${search_for}\` LIKE "%${item}%"`
@@ -49,6 +55,8 @@ router.post('/find', (req, res) => {
                     SELECT *
                     FROM \`books\` 
                     JOIN \`authors\` ON \`authors\`.\`idAuthor\` = \`books\`.\`idAuthor\`
+                    JOIN \`bookseries\` ON \`bookseries\`.\`idBook\` = \`books\`.\`idBook\`
+                    JOIN \`series\` ON \`series\`.\`idSeries\` = \`bookseries\`.\`idSeries\`
                     WHERE ${sql_condition};`
 
 
@@ -145,6 +153,9 @@ router.post('/find', (req, res) => {
                     if (result.length > 0) {
                         console.log(JSON.stringify(result, null, 2));
                         res.render(`results`, { booksArr: result, what: req.body.find_item, user: req.user })
+                    } else {
+                        console.log("\nBrak wyników...");
+                        res.redirect(`/no_results/${req.body.find_item}`);
                     }
                 } else {
                     console.log("\nBrak wyników...");
