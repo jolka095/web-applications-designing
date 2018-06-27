@@ -13,7 +13,7 @@ router.post('/find', (req, res) => {
 
     let item = req.body.find_item; // user phrase to find
     let search_for = req.body.search_for; // selected option: title, category etc.
-    let sql_condition = ''; // or/and
+    let sql_condition = ''; // or/and search_for LIKE %item%
     let sql_query = '';
 
     if (typeof search_for !== 'undefined' && search_for !== null) {
@@ -33,7 +33,6 @@ router.post('/find', (req, res) => {
                 else {
                     sql_condition += ` ${req.body.search_condition[i]} \`${search_for[i]}\` LIKE "%${item[i]}%" `;
                 }
-                // sql_condition += ` ${req.body.search_condition[i]} ${search_for[i]} LIKE "%${item[i]}%" `;
                 console.log(sql_condition)
             }
 
@@ -42,7 +41,7 @@ router.post('/find', (req, res) => {
                 sql_condition += `\`book\` LIKE "%${item}%" `;
             } else if (search_for == "author") {
                 sql_condition += `  \`authors\`.\`name\` LIKE "%${item}%" OR \`authors\`.\`surname\` LIKE "%${item}%" `;
-            } 
+            }
             else if (search_for == "series") {
                 sql_condition += `\`series\` LIKE "%${item}%" `;
             }
@@ -124,7 +123,7 @@ router.post('/find', (req, res) => {
 
         item = `%${req.body.find_item}%`
 
-        db.book.findAll({
+        db.book.find({
 
             where: {
                 [Op.or]: [
@@ -158,7 +157,7 @@ router.post('/find', (req, res) => {
                         res.redirect(`/no_results/${req.body.find_item}`);
                     }
                 } else {
-                    console.log("\nBrak wyników...");
+                    console.log("\nBrak wyników... Pusto...");
                     res.redirect(`/no_results/${req.body.find_item}`);
                 }
             })
