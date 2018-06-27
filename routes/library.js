@@ -15,12 +15,13 @@ router.get('/', auth(), function (req, res) {
             result.forEach(stat => {
 
                 statContainer.push({
-                    status: stat, //? helper.getBookStatusForUser(stat, idUser) : null,
+                    status: stat,
                     details: stat.book,
                     author: stat.book.author
                 });
             });
-
+            //console.log(JSON.stringify(result, null, 2));
+            //console.log(JSON.stringify(statContainer, null, 2));
             res.render('library', { booksArr: statContainer, user: req.user });
         })
         .catch(error => {
