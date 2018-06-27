@@ -1,50 +1,48 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <%- include('header.ejs') %>
-    <link rel='stylesheet' href='/stylesheets/user_profile.css' />
+        <link rel='stylesheet' href='/stylesheets/user_profile.css' />
 </head>
+
 <body>
-        <%if (user) { %>             <%- include('navbar.ejs') %>         <% } else { %>             <%- include('navbar1.ejs') %>         <% } %>
+    <%if (user) { %> <%- include('navbar.ejs') %> <% } else { %> <%- include('navbar1.ejs') %> <% } %>
 
-
-
-<div class="container user_profile">
-    <section class="open_book">
-
-        <div class="row book_header">
-            <div class="col col-span-6 text-left">
-                <h3>Wirtualna Czytelnia</h3>
-            </div>
-            <div class="col col-span-6 text-right">
-                <h3>Wirtualna Czytelnia</h3>
-            </div>
-        </div>
+    <h1 class="text-center">Profil czytelnika</h1>
+    <br><br>
+    <div class="container">
 
         <div class="row">
-            <div class="col col-span-6 text-center">
-                <img src="/images/hermiona.jpg" alt="" class="center-block img-circle img-responsive" id="cat">
+            <div class="col-md-6">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFqLwXLSt7nY_iW0vRguTgVIH1gjwuhx28PjI_Dc964oTRx0No" class="rounded mx-auto d-block" alt="user_avatar" >
             </div>
-            <div class="col col-span-6 text-center">
-                <div class="user"><strong>Name:</strong> <%= name %></div>
-                <div class="user"><strong>Surname:</strong> <%= surname %></div>
-                <div class="user"><strong>e-mail:</strong> <%= email %></div>
-                <a href='/library' class="btn btn-lg btn-secondary"> Biblioteczka </a>
+            <div class="col-md-6">
+                <div class="user">
+                    <p>Imię:</p>
+                    <h3>
+                        <strong><%= name %> </strong>
+                    </h3>
+                </div>
+                <div class="user">
+                    <p>Nazwisko:</p>
+                    <h3>
+                        <strong><%= surname %> </strong>
+                    </h3>
+                </div>
+                <div class="user">
+                    <p>E-mail:</p>
+                    <h3>
+                        <strong><%= email %> </strong>
+                    </h3>
+                </div>
+                <hr>
+                <a href='/library' class="btn btn-md btn-info"> <i class="fa fa-book"></i> Moja biblioteczka </a>
             </div>
         </div>
-        <div class="footer">
-            <div class="row book_footer">
-                <div class="col col-span-6 text-left">
-                    <h6>1</h6>
-                </div>
-                <div class="col col-span-6 text-right">
-                    <h6>2</h6>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
+    </div>
 
-<%- include('footer.ejs') %>
+    <%- include('footer.ejs') %>
 </body>
+
 </html>
