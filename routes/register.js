@@ -29,7 +29,8 @@ router.post('/', (req, res, next) => {
     db.user.create({
         email: req.body.email,
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+
     })
     .then(result=>{
         var user = {

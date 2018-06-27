@@ -35,7 +35,7 @@ function initPassport() {
             }
 
             db.user.findAll({
-                where: {email: email, passwrd: password},
+                where: {email: email, password: password},
                 raw: true
             })
                 .then(result=>{

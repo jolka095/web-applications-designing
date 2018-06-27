@@ -202,9 +202,8 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `idUser` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(45) NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `surname` varchar(45) NOT NULL,
-  `passwrd` varchar(45) NOT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
   PRIMARY KEY (`idUser`),
   UNIQUE KEY `iduser_UNIQUE` (`idUser`),
   UNIQUE KEY `email_UNIQUE` (`email`)
@@ -215,11 +214,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'anna.pol@wp.pl','Ania','Kowalski','qwerty'),(2,'karol_graczyk','Karol','Wojtek','qwerty'),(3,'jolantafilipiak7@gmail.com','Jola','Filipiak','asd'),(4,'lucioafonso@icloud.com','Lucio','Afonso','1234');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
+# LOCK TABLES `users` WRITE;
+# /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+# INSERT INTO `users` VALUES (1,'anna.pol@wp.pl','Ania','Kowalski','qwerty'),(2,'karol_graczyk','Karol','Wojtek','qwerty'),(3,'jolantafilipiak7@gmail.com','Jola','Filipiak','asd'),(4,'lucioafonso@icloud.com','Lucio','Afonso','1234');
+# /*!40000 ALTER TABLE `users` ENABLE KEYS */;
+# UNLOCK TABLES;
 
 --
 -- Dumping events for database 'virtual_library'

@@ -4,7 +4,8 @@ const sequelize = new Sequelize({
     database: 'virtual_library',
     username: 'root',
     port: 3306,
-    password: '',
+    ip: "172.18.0.1",
+    password: 'admin',
     // disable logging; default: console.log
     logging: false,
     operatorsAliases: false,
