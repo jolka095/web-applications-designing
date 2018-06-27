@@ -1,197 +1,120 @@
 var express = require('express');
 var router = express.Router();
-const Sequelize = require('sequelize');
 const auth = require('../authentication/middleware');
 const db = require('../db');
-const Op = Sequelize.Op;
 
+// finding books version edvanced 3
 router.post('/find', (req, res) => {
+  console.log(JSON.stringify(req.body, null, 2));
 
-    console.log(JSON.stringify(req.body, null, 2));
+  let id = 0;
 
-    // **************************************** ADVANCED SEARCH
+  let item = req.body.find_item;
+  let search_for = req.body.search_for;
 
-    let item = req.body.find_item; // user phrase to find
-    let search_for = req.body.search_for; // selected option: title, category etc.
-    let sql_condition = ''; // or/and search_for LIKE %item%
-    let sql_query = '';
+  let sql_condition = '';
+  let sql_condition_array = [];
+  let sql_query = '';
 
-    if (typeof search_for !== 'undefined' && search_for !== null) {
+  if (search_for !== undefined && search_for !== null) {
 
-        if (Array.isArray(search_for)) { // more than one selected option to find
+    if (Array.isArray(search_for)) {
 
-            for (let i = 0; i < search_for.length; i++) {
-                if (search_for[i] == "title") {
-                    sql_condition += ` ${req.body.search_condition[i]} \`book\` LIKE "%${item[i]}%" `;
-                }
-                else if (search_for[i] == "author") {
-                    sql_condition += ` ${req.body.search_condition[i]} \`authors\`.\`name\` LIKE "%${item[i]}%" OR \`authors\`.\`surname\` LIKE "%${item[i]}%" `;
-                }
-                else if (search_for[i] == "series") {
-                    sql_condition += ` ${req.body.search_condition[i]} \`series\` LIKE "%${item[i]}%" `;
-                }
-                else {
-                    sql_condition += ` ${req.body.search_condition[i]} \`${search_for[i]}\` LIKE "%${item[i]}%" `;
-                }
-                console.log(sql_condition)
-            }
-
-        } else {
-            if (search_for == `title`) {
-                sql_condition += `\`book\` LIKE "%${item}%" `;
-            } else if (search_for == "author") {
-                sql_condition += `  \`authors\`.\`name\` LIKE "%${item}%" OR \`authors\`.\`surname\` LIKE "%${item}%" `;
-            }
-            else if (search_for == "series") {
-                sql_condition += `\`series\` LIKE "%${item}%" `;
-            }
-            else {
-                sql_condition = `\`${search_for}\` LIKE "%${item}%"`
-            }
-        }
-
-        sql_query = `
-                    SELECT *
-                    FROM \`books\` 
-                    JOIN \`authors\` ON \`authors\`.\`idAuthor\` = \`books\`.\`idAuthor\`
-                    JOIN \`bookseries\` ON \`bookseries\`.\`idBook\` = \`books\`.\`idBook\`
-                    JOIN \`series\` ON \`series\`.\`idSeries\` = \`bookseries\`.\`idSeries\`
-                    WHERE ${sql_condition};`
-
-
-        console.log(sql_query);
-
-        db.sequelize.query(sql_query)
-            .then(result => {
-
-                if (typeof result !== 'undefined' && result !== null) {
-                    if (result.length > 0) {
-                        if (typeof result[0] !== 'undefined' && result[0] !== null && result[0].length !== 0) {
-                            console.log(JSON.stringify("\nRESULT********************", null, 2));
-                            console.log(JSON.stringify(result, null, 2));
-
-                            let arrayOfIds = []
-
-                            result[0].forEach(el => {
-                                console.log(el)
-                                arrayOfIds.push(el.idBook)
-                            });
-
-                            console.log(arrayOfIds);
-
-                            db.book.findAll({
-                                where: { idBook: arrayOfIds },
-
-                                include: [
-                                    db.author,
-                                    db.mark,
-                                    db.statuses,
-                                    {
-                                        model: db.bookSeries,
-                                        include: [db.series]
-                                    }
-                                ]
-                            })
-                                .then(result => {
-                                    if (result === null || result === undefined || result.length === 0) {
-                                        res.redirect(`/no_results/${req.body.find_item}`);
-                                    } else {
-                                        console.log(JSON.stringify(result, null, 2));
-                                        res.render(`results`, { booksArr: result, what: item, user: req.user })
-                                    }
-                                })
-                                .catch(error => {
-                                    console.log(error);
-                                    res.status(400).send(error);
-                                });
-                        } else {
-                            console.log("\nBrak wyników...");
-                            res.redirect(`/no_results/${req.body.find_item}`);
-                        }
-                    }
-                } else {
-                    console.log("\nBrak wyników...");
-                    res.redirect(`/no_results/${req.body.find_item}`);
-                }
-
-            })
-
+      for (let i = 0; i < search_for.length; i++) {
+        sql_condition += ` ${req.body.search_condition[i]} ${search_for[i]} LIKE "%${item[i]}%" `;
+        console.log(sql_condition)
+      }
 
     } else {
-
-        // **************************************** SIMPLE SEARCH
-
-        item = `%${req.body.find_item}%`
-
-        db.book.find({
-
-            where: {
-                [Op.or]: [
-                    { book: { [Op.like]: item } },
-                    { originalTitle: { [Op.like]: item } },
-                    { category: { [Op.like]: item } }
-                ]
-            },
-
-            include: [
-                db.author,
-                db.mark,
-                db.statuses,
-                {
-                    model: db.bookSeries,
-                    include: [db.series]
-                }
-            ]
-
-            // TODO: find where author.name like %item% or author.surname like %item% or series name like %item%
-
-        })
-            .then(result => {
-
-                if (typeof result !== 'undefined' && result !== null) {
-                    if (result.length > 0) {
-                        console.log(JSON.stringify(result, null, 2));
-                        res.render(`results`, { booksArr: result, what: req.body.find_item, user: req.user })
-                    } else {
-                        console.log("\nBrak wyników...");
-                        res.redirect(`/no_results/${req.body.find_item}`);
-                    }
-                } else {
-                    console.log("\nBrak wyników... Pusto...");
-                    res.redirect(`/no_results/${req.body.find_item}`);
-                }
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(400).send(err);
-            });
+      sql_condition = `${search_for} LIKE "%${item}%"`
     }
 
-});
+  } else {
+    sql_condition = `title LIKE "%${item}%" OR author LIKE "%${item}%" OR category LIKE "%${item}%" OR series LIKE "%${item}%"`
+  }
+
+  sql_query = `SELECT * FROM book_info WHERE ${sql_condition} ORDER BY author_id, vol_in_series;`;
+  console.log(sql_query);
+
+  db.query(`SELECT book_id FROM book_info WHERE title="${item}"`, function (err, rows, fields) {
+
+    if (typeof rows !== 'undefined' && rows.length > 0) {
+      id = rows[0].book_id;
+      // console.log('id : ', id)
+      res.redirect(`/book_profile/${id}`);
+    }
+    else {
+      console.log("\nSzukam dalej po autorze...");
+      db.query(`SELECT author_id FROM book_info WHERE author="${item}"`, function (err, rows, fields) {
+
+        if (typeof rows !== 'undefined' && rows.length > 0) {
+          id = rows[0].author_id;
+          // console.log('id : ', id)
+          res.redirect(`/authors/${id}/${item}`);
+        }
+        else {
+          console.log("\nSzukam dalej po kategorii...");
+          db.query(`SELECT category_id FROM book_info WHERE category="${item}"`, function (err, rows, fields) {
+
+            if (typeof rows !== 'undefined' && rows.length > 0) {
+              id = rows[0].category_id;
+              // console.log('id : ', id)
+              res.redirect(`/categories/${id}/${item}`);
+            }
+            else {
+              console.log("\nSzukam dalej po serii...");
+              db.query(`SELECT series_id FROM book_info WHERE series="${item}"`, function (err, rows, fields) {
+
+                if (typeof rows !== 'undefined' && rows.length > 0) {
+                  id = rows[0].series_id;
+                  // console.log('id : ', id)
+                  res.redirect(`/series/${id}/${item}`);
+                }
+                else {
+                  db.query(sql_query, function (err, rows, fields) {
+                    if (typeof rows !== 'undefined' && rows.length > 0) {
+                      res.render(`results`, { booksArr: rows, what: item, user: req.user })
+                    }
+                    else {
+                      console.log("\nBrak wyników...");
+                      res.redirect(`/no_results/${item}`);
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+})
 
 
+/* GET home page. */
 router.get('/', function (req, res, next) {
 
-    db.book.findAll({
-        limit: 4,
+  const queryStatement = `SELECT * FROM book_info ORDER BY avg_mark DESC LIMIT 4;`;
 
-        include: [
-            db.author,
-        ]
-    })
-        .then(result => {
-            if (result === null || result === undefined || result.length === 0) {
-                res.send("Nie znaleziono żadnych kategorii w bazie");
-            } else {
-                //console.log(JSON.stringify(result, null, 2));
-                res.render('index', { booksArr: result, user: req.user })
-            }
-        })
-        .catch(error => {
-            console.log(error);
-            res.status(400).send(error);
-        });
+  db.query(queryStatement, (error, result) => {
 
+    if (result === null || result === undefined || result.length === 0) {
+
+      res.send("Nie znaleziono żadnych kategorii w bazie")
+
+    }
+    else {
+
+      if (req.user) {
+        console.log("\nZALOGOWANY\n")
+      } else {
+        console.log("\n----> NIEZALOGOWANY\n")
+      }
+      // console.log(JSON.stringify(result, null, 2))
+      res.render('index', { booksArr: result, user: req.user })
+    }
+
+  })
 });
 
 module.exports = router;

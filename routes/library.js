@@ -1,34 +1,20 @@
 const express = require('express');
-const Sequelize = require('sequelize');
 const auth = require('../authentication/middleware');
-const router = express.Router();
 const db = require('../db');
+const router = express.Router();
 
 router.get('/', auth(), function (req, res) {
-    db.statuses.findAll({
-        where: {idUser: req.user.idUser},
-        include: [{ model: db.book, include: [db.author]}]
+
+    const queryStatement = `SELECT * FROM users natural join book_status natural join books natural join book_info WHERE idusers = "${req.user[0].idusers}"; `;
+
+    db.query(queryStatement, (error, result) => {
+        
+        if (result === null || result === undefined || result.length === 0) {
+            res.render('library', { booksArr: null, user: req.user })
+        } else {
+            res.render('library', { booksArr: result, user: req.user })
+        }
     })
-        .then(result=>{
-            const statContainer = [];
-
-            result.forEach(stat => {
-
-                statContainer.push({
-                    status: stat,
-                    details: stat.book,
-                    author: stat.book.author
-                });
-            });
-            //console.log(JSON.stringify(result, null, 2));
-            //console.log(JSON.stringify(statContainer, null, 2));
-            res.render('library', { booksArr: statContainer, user: req.user });
-        })
-        .catch(error => {
-            console.log(error);
-            res.render('library', { booksArr: null, user: req.user });
-            // res.status(400).send(error);
-        });
 });
 
 module.exports = router;
