@@ -43,10 +43,11 @@ router.get('/:book_id', (req, res, next) => {
                     status: ((typeof result.statuses !== 'undefined' && result.statuses !== null) ? helper.getBookStatusForUser(result.statuses, idUser) : null),
                     volNumberInSeries: ((typeof result.bookseries !== 'undefined' && result.bookseries !== null) ? ((result.bookseries.length > 0) ? result.bookseries[0].booksNumber : null) : null),
                     series: ((typeof result.bookseries !== 'undefined' && result.bookseries !== null) ? ((result.bookseries.length > 0) ? result.bookseries[0].series : null) : null)
+
                 }
 
-                console.log(JSON.stringify(bookObject, null, 2));
-                // console.log(JSON.stringify(result, null, 2));
+                //console.log(JSON.stringify(bookObject, null, 2));
+                //console.log(JSON.stringify(result, null, 2));
                 res.render('book_profile', { book: bookObject, user: idUser })
             } else {
                 res.send("Nie znaleziono takiej ksiażki w bazie");
@@ -60,172 +61,139 @@ router.get('/:book_id', (req, res, next) => {
 
 });
 
-router.post('/rate_book/:book_id/user/:user_id', (req, res, next) => {
+router.post('/rate_book/:book_id/', (req, res, next) => {
+    if (req.user) {
+        const mk = parseInt(req.body.mark);
 
-    const mark = parseInt(req.body.mark) + 1;
-    const queryStatement1 = `DELETE FROM book_marks WHERE idusers = ${req.params.user_id} AND idbooks = ${req.params.book_id}`;
-
-    const queryStatement = `INSERT INTO book_marks (idbooks, idmarks, idusers)
-    VALUES ( ${req.params.book_id}, ${mark}, ${req.params.user_id} )`;
-
-    console.log("queryStatement\n", queryStatement);
-    db.query(queryStatement1, (error2, result2) => {
-        if (error2) {
-            console.log("error ocurred", error2);
-            res.send(JSON.stringify({
-                "code": 400,
-                "failed": "error ocurred"
-            }, null, 2))
-        } else {
-            console.log(`Usunięto ${req.params.book_id} przez usera ${req.params.user_id}`);
-            db.query(queryStatement, (error, result) => {
-
-                if (error) {
-                    console.log("error ocurred", error);
-                    res.send(JSON.stringify({
-                        "code": 400,
-                        "failed": "error ocurred"
-                    }, null, 2))
-                } else {
-                    console.log(`Oceniono książkę ${req.params.book_id} przez usera ${req.params.user_id} na ${mark}`);
-                    res.redirect(`/book_profile/${req.params.book_id}`)
-                }
-            })
-        }
-    })
-});
-
-router.post('/add_to_read/:book_id', function (req, res, next) {
-
-
-    var book_st = {
-        "idbooks": req.params.book_id,
-        "idusers": req.user[0].idusers,
-        "idstatus": 2
-    };
-
-    var books_to_read = `SELECT COUNT(*) as count FROM book_status WHERE idbooks= ${req.params.book_id} AND idstatus=2`;
-    var read_books = `SELECT COUNT(*) as count FROM book_status WHERE idbooks= ${req.params.book_id} AND idstatus=1`;
-
-    db.query(read_books, function (err, result) {
-        var read = result[0].count;
-        db.query(books_to_read, function (err, result1) {
-            var to_read = result1[0].count;
-
-            if (read === 0 && to_read === 0) {
-                db.query(`INSERT into book_status SET ?`, book_st, function (err) {
-                    if (err) {
-                        res.send({
-                            "code": 400,
-                            "failed": "could not add to library"
-                        })
-                    } else {
-                        if (to_read > 0) {
-                            db.query(`DELETE from book_status WHERE idbooks=${req.params.book_id} AND idstatus=2`), function (err) {
-                                if (err) {
-                                    res.send({
-                                        "code": 400,
-                                        "failed": "could not delete from library"
-                                    })
-                                } else {
-                                    res.redirect(`/catalog/${req.params.book_id}`)
-                                }
-                            };
-
-                            res.redirect(`/catalog/${req.params.book_id}`)
-                        } else {
-                            res.redirect(`/catalog/${req.params.book_id}`)
-                        }
-                    }
-                });
-            } else {
-                res.redirect(`/catalog/${req.params.book_id}`)
+        db.mark.findOne({
+            where: {
+                idBook: req.params.book_id,
+                idUser: req.user.idUser
             }
-        });
-    });
-});
+        }).then(result => {
 
-
-router.post('/add_to_read/remove/:book_id', function (req, res, next) {
-
-    const query = `DELETE from book_status WHERE idbooks=${req.params.book_id} AND idstatus=2 AND idusers=${req.user[0].idusers};`;
-
-    db.query(query, function (err) {
-        if (err) {
-            res.send({
-                "code": 400,
-                "failed": "could not delete from library"
-            })
-        } else {
-            res.redirect(`/catalog/${req.params.book_id}`)
-        }
-    })
-
-});
-
-
-router.post('/read/remove/:book_id', function (req, res, next) {
-
-    const query = `DELETE from book_status WHERE idbooks=${req.params.book_id} AND idstatus=1 AND idusers=${req.user[0].idusers};`;
-
-    db.query(query, function (err) {
-        if (err) {
-            res.send({
-                "code": 400,
-                "failed": "could not delete from library"
-            })
-        } else {
-            res.redirect(`/catalog/${req.params.book_id}`)
-        }
-    })
-
-});
-
-router.post('/read/:book_id', function (req, res, next) {
-
-
-    var book_st = {
-        "idbooks": req.params.book_id,
-        "idusers": req.user[0].idusers,
-        "idstatus": 1
-    };
-
-    var books_to_read = `SELECT COUNT(*) as count FROM book_status WHERE idbooks= ${req.params.book_id} AND idstatus=2`;
-    var read_books = `SELECT COUNT(*) as count FROM book_status WHERE idbooks= ${req.params.book_id} AND idstatus=1`;
-
-    db.query(read_books, function (err, result) {
-        var read = result[0].count;
-        db.query(books_to_read, function (err, result1) {
-            var to_read = result1[0].count;
-            if (read === 0) {
-                db.query(`INSERT into book_status SET ?`, book_st, function (err, rows) {
-                    if (err) {
-                        res.send({
-                            "code": 400,
-                            "failed": "could not add to library"
-                        })
-                    } else if (to_read > 0) {
-                        db.query(`DELETE from book_status WHERE idbooks=${req.params.book_id} AND idstatus=2`), function (err) {
-                            if (err) {
-                                res.send({
-                                    "code": 400,
-                                    "failed": "could not delete from library"
-                                })
-                            } else {
-                                res.redirect(`/catalog/${req.params.book_id}`)
-                            }
-                        };
-
-                        res.redirect(`/catalog/${req.params.book_id}`)
-                    } else {
-                        res.redirect(`/catalog/${req.params.book_id}`)
+            if (typeof result !== 'undefined' && result !== null) {
+                const mark = {
+                    idBook: req.params.book_id,
+                    idUser: req.user.idUser,
+                    mark: mk,
+                };
+                const where = {
+                    where: {
+                        idMark: result.idMark
                     }
-                });
+                };
+
+                db.mark.update(mark, where)
+                    .then(marks => {
+                        // let's assume the default of isAdmin is false:
+                        console.log('Status changed: '+marks)
+                        res.redirect(`/catalog/${req.params.book_id}`)
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        res.status(400).send(error);
+                    });
+
             } else {
-                res.redirect(`/catalog/${req.params.book_id}`)
+                db.mark.create({
+                    idBook: req.params.book_id,
+                    idUser: req.user.idUser,
+                    mark: mk,
+                })
+                    .then(marks => {
+                        // let's assume the default of isAdmin is false:
+                        console.log('Status added: '+marks.get({plain: true}))
+                        res.redirect(`/catalog/${req.params.book_id}`)
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        res.status(400).send(error);
+                    });
             }
+        })
+            .catch(error => {
+                console.log(error);
+                res.status(400).send(error);
+            });
+    }
+});
+
+router.post('/add/:book_id', function (req, res, next) {
+    if (req.user) {
+        db.statuses.findOne({
+            where: {
+                idBook: req.params.book_id,
+                idUser: req.user.idUser
+            }
+        }).then(result => {
+
+            if (typeof result !== 'undefined' && result !== null) {
+                const stats = {
+                    idBook: req.params.book_id,
+                    idUser: req.user.idUser,
+                    stat: req.body.status,
+                };
+                const where = {
+                    where: {
+                        idStat: result.idStat
+                    }
+                };
+
+
+                db.statuses.update(stats, where)
+                    .then(status => {
+                        // let's assume the default of isAdmin is false:
+                        console.log('Status changed: '+status)
+                        res.redirect(`/catalog/${req.params.book_id}`)
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        res.status(400).send(error);
+                    });
+
+            } else {
+                db.statuses.create({
+                    idBook: req.params.book_id,
+                    idUser: req.user.idUser,
+                    stat: req.body.status,
+                })
+                    .then(status => {
+                        // let's assume the default of isAdmin is false:
+                        console.log('Status added: '+status.get({plain: true}))
+                        res.redirect(`/catalog/${req.params.book_id}`)
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        res.status(400).send(error);
+                    });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(400).send(error);
         });
-    });
+    }
+});
+
+router.post('/remove/:book_id', function (req, res, next) {
+    if (req.user) {
+        db.statuses.destroy({
+            where: {
+                idBook: req.params.book_id,
+                idUser: req.user.idUser
+            }
+        })
+            .then(() => {
+                res.redirect(`/catalog/${req.params.book_id}`)
+            })
+            .catch(error => {
+                console.log(error);
+                res.status(400).send("could not delete from library");
+            });
+    }
 });
 
 module.exports = router;
