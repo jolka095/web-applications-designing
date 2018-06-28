@@ -11,7 +11,7 @@ router.get('/', auth(), function (req, res, next) {
         where:{email: req.user.email}
     })
         .then(result => {
-            res.render('user-profile', { name: result.name, surname: result.surname, email: result.email, user: req.user})
+            res.render('user-profile', { username: result.username, password: result.password, email: result.email, user: req.user})
         })
         .catch(error => {
             console.log(error);
