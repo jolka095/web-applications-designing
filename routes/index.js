@@ -123,7 +123,7 @@ router.post('/find', (req, res) => {
 
         item = `%${req.body.find_item}%`
 
-        db.book.find({
+        db.book.findAll({
 
             where: {
                 [Op.or]: [
